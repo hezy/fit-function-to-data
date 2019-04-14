@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Mar 9, 2019
-@author: Hezy Amiel 
-fit function to data with y error bars  
+@author: Hezy Amiel
+fit function to data with y error bars
 """
 
 import numpy as np
@@ -36,3 +36,5 @@ ax.set_ylabel('displacment (mm)')
 
 plt.show()
 
+print (popt)
+print (pcov)
