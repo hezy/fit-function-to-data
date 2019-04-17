@@ -10,6 +10,11 @@ this script fits a defined function to a given data with y error bars
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from IPython import get_ipython
+
+# output graph in a sperate window with zoom etc.
+# get_ipython().run_line_magic('matplotlib', 'inline')
+get_ipython().run_line_magic('matplotlib', 'qt')
 
 # define a function
 def func(x, a, b, c):
