@@ -21,9 +21,9 @@ dy = data.iloc[:,3]
 
 
 # define a function
-def func(x, a, b, c):
+def func(x, a1, a2, a3):
     # a polynumial function
-    return a * x**2 + b*x + c
+    return a1 * x**2 + a2*x + a3
 
 """
 # fabricate data with function + random noise
@@ -41,7 +41,7 @@ popt
 # create figure
 fig, ax = plt.subplots(figsize=(16, 8))
 plt.errorbar(x, y, xerr=dx, yerr=dy, fmt='none', label='experiment')
-plt.plot(x,func(x, *popt), label='fit: a=%5.3f, b=%5.3f, c=%5.3f' % tuple(popt))
+plt.plot(x,func(x, *popt), label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(popt))
 
 # arange figure
 ax.grid(True)
@@ -55,6 +55,6 @@ plt.show()
 #print (popt)
 #print (pcov)
 
-print ('a = ' + str(popt[0]) + ' +/- ' + str(pcov[0,0]))
-print ('b = ' + str(popt[1]) + ' +/- ' + str(pcov[1,1]))
-print ('c = ' + str(popt[2]) + ' +/- ' + str(pcov[2,2]))
+# printing the fit parameters with their error estimates
+for i in range(0,3):
+    print ('a' + str(i) + '= ' + str(popt[i]) + ' +/- ' + str(pcov[i,i]))
