@@ -31,7 +31,6 @@ def planck(T, lam):
 # create curves for 6 different temperatures
 x = np.arange(100, 4100, 1)
 dx = x[1] - x[0]
-#fig, ax = plt.subplots(figsize=(16, 8))
 fig, axs = plt.subplots(nrows=2, ncols=1, sharex=False, figsize=(8, 16))
 
 T = np.arange(1000, 6000, 500)
