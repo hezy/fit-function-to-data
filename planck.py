@@ -1,0 +1,60 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Apr 30, 2019
+@author: Hezy Amiel
+planck.py
+this script creats a set of black body radiation curves at varius temperatures
+"""
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+# Planck's constant
+h = 6.62607015e-34 # J*s
+
+# Boltzmann's constant
+k = 1.380648528e-23 # J/K
+
+# speed of light
+c = 299792458 # m/s
+
+
+# Palnck's function
+# T = temperature, lam = wavelength (nm), l = wavelength (m)
+def planck(T, lam):
+    l = lam * 1e-9
+    return (8*np.pi*h*c/l**5)/(np.exp(h*c/(l*k*T)-1))
+
+
+# create curves for 6 different temperatures
+x = np.arange(100, 4100, 1)
+dx = x[1] - x[0]
+#fig, ax = plt.subplots(figsize=(16, 8))
+fig, axs = plt.subplots(nrows=2, ncols=1, sharex=False, figsize=(8, 16))
+
+T = np.arange(1000, 6000, 500)
+Lmax = np.array([])
+for t in T:
+    y = planck(t,x)
+    dydx = (np.gradient(y,dx))
+    ddydx = (np.gradient(dydx,dx))
+    ratio = abs(ddydx/dydx)
+    axs[0].plot(x, y, "-", label="f")
+    Lmax = np.append(Lmax,np.argmax(ratio))
+    
+# arange figure
+
+axs[0].grid(True)
+axs[0].set_title("Planck")
+axs[0].set_xlabel("wavelength (nm)")
+axs[0].set_ylabel("intensity ()")
+
+axs[1].plot(T,Lmax,"o")
+axs[1].grid(True)
+axs[1].set_title("Wien’s Law")
+axs[1].set_xlabel("Temperature (K)")
+axs[1].set_ylabel("Lmax (nm)")
+
+plt.show()
