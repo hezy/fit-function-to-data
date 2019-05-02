@@ -27,9 +27,9 @@ def planck(T, lam):
     return (8*np.pi*h*c/l**5)/(np.exp(h*c/(l*k*T)-1))
  
 # define a function
-def wien(x, a):
+def wien(x, a0, a1, a2):
     # a polynumial function
-    return a/x
+    return a0 + a1/x + a2/(x**2)
 
     
 # create curves for different temperatures
@@ -50,7 +50,12 @@ for t in T:
 # fit data with function
 popt, pcov = curve_fit(wien, T, Lmax)
 popt
-axs[1].plot(T, wien(T, *popt), 'g--')
+T2 = np.arange(500, 6000, 50)
+axs[1].plot(T2, wien(T2, *popt), 'r-')
+
+print ('a0 = ' + str(popt[0])) 
+print ('a1 = ' + str(popt[1])) 
+print ('a2 = ' + str(popt[2]))
 
 # arange figure
  
