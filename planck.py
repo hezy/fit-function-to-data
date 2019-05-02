@@ -8,7 +8,7 @@ this script uses Planck's equation to create a set of black body radiation curve
  
 import numpy as np
 import matplotlib.pyplot as plt
- 
+from scipy.optimize import curve_fit
  
 # Planck's constant
 h = 6.62607015e-34 # J*s
@@ -26,7 +26,12 @@ def planck(T, lam):
     l = lam * 1e-9
     return (8*np.pi*h*c/l**5)/(np.exp(h*c/(l*k*T)-1))
  
- 
+# define a function
+def wien(x, a):
+    # a polynumial function
+    return a/x
+
+    
 # create curves for different temperatures
 x = np.arange(100, 10100, 1)
 dx = x[1] - x[0]
@@ -41,6 +46,10 @@ for t in T:
     ratio = abs(ddydx/dydx)
     axs[0].plot(x, y, "-", label=str(t))
     Lmax = np.append(Lmax,np.argmax(ratio))
+
+# fit data with function
+#popt, pcov = curve_fit(wien, x, y, p0=None, sigma=1)
+#popt
    
 # arange figure
  
