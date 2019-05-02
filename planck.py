@@ -48,9 +48,10 @@ for t in T:
     Lmax = np.append(Lmax,np.argmax(ratio))
 
 # fit data with function
-#popt, pcov = curve_fit(wien, x, y, p0=None, sigma=1)
-#popt
-   
+popt, pcov = curve_fit(wien, T, Lmax)
+popt
+axs[1].plot(T, wien(T, *popt), 'g--')
+
 # arange figure
  
 axs[0].grid(True)
