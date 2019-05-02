@@ -28,11 +28,11 @@ def planck(T, lam):
  
  
 # create curves for different temperatures
-x = np.arange(100, 2600, 1)
+x = np.arange(100, 10100, 1)
 dx = x[1] - x[0]
 fig, axs = plt.subplots(nrows=2, ncols=1, sharex=False, figsize=(10, 14))
  
-T = np.arange(1500, 6000, 100)
+T = np.arange(500, 6000, 250)
 Lmax = np.array([])
 for t in T:
     y = planck(t,x)
