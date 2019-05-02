@@ -57,6 +57,7 @@ axs[1].plot(T, wien(T, *popt), 'g--')
 axs[0].grid(True)
 axs[0].set_title("Planck's curves")
 axs[0].set_xlabel("wavelength (nm)")
+axs[0].set_xlim(0,3000)
 axs[0].set_ylabel("intensity ()")
  
 axs[1].plot(T, Lmax, 'o')
