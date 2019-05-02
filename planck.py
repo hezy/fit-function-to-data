@@ -32,7 +32,7 @@ x = np.arange(100, 2600, 1)
 dx = x[1] - x[0]
 fig, axs = plt.subplots(nrows=2, ncols=1, sharex=False, figsize=(10, 14))
  
-T = np.arange(1000, 6000, 100)
+T = np.arange(1500, 6000, 100)
 Lmax = np.array([])
 for t in T:
     y = planck(t,x)
