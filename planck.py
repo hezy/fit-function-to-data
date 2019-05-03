@@ -37,13 +37,13 @@ x = np.arange(1, 30100, 100)
 xfit = np.arange(1, 30001, 1)
 fig, axs = plt.subplots(nrows=2, ncols=1, sharex=False, figsize=(8, 12))
  
-T = np.arange(100, 10000, 500)
+T = np.arange(100, 10100, 1000)
 Lmax = np.array([])
 for t in T:
-    y = planck(x,t)
+    y = (planck(x,t))*(1 + np.random.normal(0, 0.1, None))
     axs[0].plot(x, y, ".")
     popt, pcov = curve_fit(planck, x, y, 2000)
-    print(popt)
+    print(popt, pcov)
     yfit = planck(xfit, *popt)
     axs[0].plot(xfit, yfit, "-")
     L = np.argmax(yfit)
@@ -52,9 +52,10 @@ for t in T:
 
 # fit data with function
 axs[1].plot(T, Lmax, "bo")
-T2 = np.arange(100, 10000, 100)
+T2 = np.arange(100, 10100, 100)
 popt, pcov = curve_fit(wien, T, Lmax)
 print(popt)
+print(pcov)
 axs[1].plot(T2, wien(T2, *popt), "r-")
 
 # arange figure
