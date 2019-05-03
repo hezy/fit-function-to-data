@@ -73,7 +73,7 @@ axs[0].set_ylabel("intensity ()")
 axs[1].grid(True)
 axs[1].set_title("Wien’s Law")
 axs[1].set_xlabel("Temperature (K)")
-axs[1].set_ylabel("Lmax (nm)")
+axs[1].set_ylabel("$\lambda_{max} (nm)$")
 axs[1].set_yscale('log')
 
 plt.show()
