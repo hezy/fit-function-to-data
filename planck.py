@@ -33,17 +33,17 @@ def wien(x, a0, a1):
 
     
 # create Planck's curves for different temperatures
-x = np.arange(100, 10100, 100)
-xfit = np.arange(100, 10001, 1)
+x = np.arange(1, 30100, 100)
+xfit = np.arange(1, 30001, 1)
 fig, axs = plt.subplots(nrows=2, ncols=1, sharex=False, figsize=(8, 12))
  
-T = np.arange(1000, 7000, 500)
+T = np.arange(100, 10000, 500)
 Lmax = np.array([])
 for t in T:
     y = planck(x,t)
     axs[0].plot(x, y, ".")
     popt, pcov = curve_fit(planck, x, y, 2000)
-    popt
+    print(popt)
     yfit = planck(xfit, *popt)
     axs[0].plot(xfit, yfit, "-")
     L = np.argmax(yfit)
@@ -52,9 +52,9 @@ for t in T:
 
 # fit data with function
 axs[1].plot(T, Lmax, "bo")
-T2 = np.arange(1000, 7000, 100)
+T2 = np.arange(100, 10000, 100)
 popt, pcov = curve_fit(wien, T, Lmax)
-popt
+print(popt)
 axs[1].plot(T2, wien(T2, *popt), "r-")
 
 # arange figure
@@ -62,7 +62,7 @@ axs[1].plot(T2, wien(T2, *popt), "r-")
 axs[0].grid(True)
 axs[0].set_title("Planck's curves")
 axs[0].set_xlabel("wavelength (nm)")
-axs[0].set_xlim(0,3000)
+axs[0].set_xlim(0,2000)
 axs[0].set_ylabel("intensity ()")
  
 
