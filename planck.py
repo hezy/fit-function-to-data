@@ -63,13 +63,17 @@ axs[1].plot(T2, wien(T2, *popt), "r-")
 axs[0].grid(True)
 axs[0].set_title("Planck's curves")
 axs[0].set_xlabel("wavelength (nm)")
-axs[0].set_xlim(0,2000)
+axs[0].set_xlim(100,2000)
+#axs[0].set_ylim(1e-250,1e10)
 axs[0].set_ylabel("intensity ()")
- 
+#axs[0].set_yscale('log')
+#axs[0].set_xscale('log')
+
 
 axs[1].grid(True)
 axs[1].set_title("Wien’s Law")
 axs[1].set_xlabel("Temperature (K)")
 axs[1].set_ylabel("Lmax (nm)")
+axs[1].set_yscale('log')
 
 plt.show()
