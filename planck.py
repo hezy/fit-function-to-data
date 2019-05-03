@@ -22,40 +22,40 @@ c = 299792458 # m/s
  
 # Palnck's function
 # T = temperature, lam = wavelength (nm), l = wavelength (m)
-def planck(T, lam):
+def planck(lam, T):
     l = lam * 1e-9
     return (8*np.pi*h*c/l**5)/(np.exp(h*c/(l*k*T)-1))
  
-# define a function
-def wien(x, a0, a1, a2):
-    # a polynumial function
-    return a0 + a1/x + a2/(x**2)
+    
+# a function for fitting Wien's curve
+def wien(x, a0, a1):
+    return a0 + a1/x
 
     
-# create curves for different temperatures
-x = np.arange(100, 10100, 1)
-dx = x[1] - x[0]
-fig, axs = plt.subplots(nrows=2, ncols=1, sharex=False, figsize=(10, 14))
+# create Planck's curves for different temperatures
+x = np.arange(100, 10100, 100)
+xfit = np.arange(100, 10001, 1)
+fig, axs = plt.subplots(nrows=2, ncols=1, sharex=False, figsize=(8, 12))
  
-T = np.arange(500, 6000, 250)
+T = np.arange(1000, 7000, 500)
 Lmax = np.array([])
 for t in T:
-    y = planck(t,x)
-    dydx = (np.gradient(y,dx))
-    ddydx = (np.gradient(dydx,dx))
-    ratio = abs(ddydx/dydx)
-    axs[0].plot(x, y, "-", label=str(t))
-    Lmax = np.append(Lmax,np.argmax(ratio))
+    y = planck(x,t)
+    axs[0].plot(x, y, ".")
+    popt, pcov = curve_fit(planck, x, y, 2000)
+    popt
+    yfit = planck(xfit, *popt)
+    axs[0].plot(xfit, yfit, "-")
+    L = np.argmax(yfit)
+    Lmax = np.append(Lmax,np.argmax(yfit))
+
 
 # fit data with function
+axs[1].plot(T, Lmax, "bo")
+T2 = np.arange(1000, 7000, 100)
 popt, pcov = curve_fit(wien, T, Lmax)
 popt
-T2 = np.arange(500, 6000, 50)
-axs[1].plot(T2, wien(T2, *popt), 'r-')
-
-print ('a0 = ' + str(popt[0])) 
-print ('a1 = ' + str(popt[1])) 
-print ('a2 = ' + str(popt[2]))
+axs[1].plot(T2, wien(T2, *popt), "r-")
 
 # arange figure
  
@@ -65,10 +65,10 @@ axs[0].set_xlabel("wavelength (nm)")
 axs[0].set_xlim(0,3000)
 axs[0].set_ylabel("intensity ()")
  
-axs[1].plot(T, Lmax, 'o')
+
 axs[1].grid(True)
 axs[1].set_title("Wien’s Law")
 axs[1].set_xlabel("Temperature (K)")
 axs[1].set_ylabel("Lmax (nm)")
- 
+
 plt.show()
