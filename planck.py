@@ -23,14 +23,14 @@ c = 299792458 # m/s
  
 """
 Palnck's function -
-T = temperature, lam = wavelength (nm), l = wavelength (m)
+T = temperature (K), lam = wavelength (nm), l = wavelength (m)
 this calculates the spectral radiance - the power per unit solid angle and 
 per unit of area normal to the propagation, density of wavelength λ radiation 
 per unit wavelegth at thermal equilibrium at temperature T.
 """
 def planck(lam, T):
     l = lam * 1e-9
-    return 1e-9*(8*np.pi*h*c/l**5)/(np.exp(h*c/(l*k*T)-1))
+    return (8*np.pi*h*c/l**5)/(np.exp(h*c/(l*k*T)-1))
  
   
 """    
@@ -57,8 +57,8 @@ xfit = np.arange(1, 30101, 1) # wavelength (nm)
 T = np.arange(100, 10100, 1000) # temperature (K)
 Lmax = np.array([])
 for t in T:
-    # creating Planck's cureve for temperature = t adding a random noise
-    y = (planck(x,t))*(1 + np.random.normal(0, 0.1, None)) 
+    # creating Planck's cureve for temperature = t (adding a random noise)
+    y = (planck(x,t)) #*(1 + np.random.normal(0, 0.05, None)) 
     axs[0].plot(x, y, ".") 
     
     # fitting Planck's curve for t
@@ -87,7 +87,7 @@ axs[0].grid(True)
 axs[0].set_title("Planck's curves", fontsize=fst)
 axs[0].set_xlabel("wavelength (nm)", fontsize=fsl)
 axs[0].set_xlim(0,2000)
-axs[0].set_ylabel(r'$spectral \: radiance \: (W/sr/m^2/nm)$', fontsize=fsl)
+axs[0].set_ylabel(r'$spectral \: radiance \: (W/sr/m^3)$', fontsize=fsl)
 
 axs[1].grid(True)
 axs[1].set_title("Wien’s Law", fontsize=fst)
