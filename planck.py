@@ -58,7 +58,7 @@ T = np.arange(100, 10100, 1000) # temperature (K)
 Lmax = np.array([])
 for t in T:
     # creating Planck's cureve for temperature = t (adding a random noise)
-    y = (planck(x,t)) #*(1 + np.random.normal(0, 0.05, None)) 
+    y = (planck(x,t)) *(1 + np.random.normal(0, 0.05, None)) 
     axs[0].plot(x, y, ".") 
     
     # fitting Planck's curve for t
