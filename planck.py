@@ -49,11 +49,11 @@ fst = 16 #font size for title
 fsl = 14 #font size for axes labels
     
 # create Planck's curves for different temperatures
-x = np.arange(1, 30101 , 100) # wavelength (nm)
-xfit = np.arange(1, 30101, 1) # wavelength (nm)
+x = np.arange(1, 12101 , 100) # wavelength (nm)
+xfit = np.arange(1, 12101, 1) # wavelength (nm)
 
 
-T = np.arange(100, 10100, 1000) # temperature (K)
+T = np.arange(300, 6000, 300) # temperature (K)
 Lmax = np.array([])
 for t in T:
     # creating Planck's cureve for temperature = t (adding a random noise)
@@ -73,7 +73,7 @@ for t in T:
 
 # fitting Wien's curve with a 1/T function 
 axs[1].plot(T, Lmax, "bo")
-Tfit = np.arange(1, 12000, 100) # temperature (K)
+Tfit = np.arange(100, 6300, 100) # temperature (K)
 popt, pcov = curve_fit(wien, T, Lmax)
 print(popt)
 print(pcov)
@@ -91,9 +91,9 @@ axs[0].set_ylabel(r'$spectral \: radiance \: (W/sr/m^3)$', fontsize=fsl)
 axs[1].grid(True)
 axs[1].set_title("Wien’s Law", fontsize=fst)
 axs[1].set_xlabel("Temperature (K)", fontsize=fsl)
-axs[1].set_xlim(1,10000)
+axs[1].set_xlim(1,6000)
 axs[1].set_ylabel(r'$\lambda_{max} \: (nm)$',fontsize=fsl)
-axs[1].set_ylim(0,30000)
+axs[1].set_ylim(0,10000)
 #axs[1].set_yscale('log')
 
 plt.show()
