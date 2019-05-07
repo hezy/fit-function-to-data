@@ -11,15 +11,16 @@ for each curve, and use it to plot Wien's law: λmax = b/T
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
- 
+from scipy import constants
+
 # Planck's constant
-h = 6.62607015e-34 # J*s
+h = constants.value(u'Planck constant') # 6.62607004e-34 J*s
  
 # Boltzmann's constant
-k = 1.380648528e-23 # J/K
+k = constants.value(u'Boltzmann constant') # k = 1.38064852e-23 J/K
  
 # the speed of light in vacuum
-c = 299792458 # m/s
+c = constants.value(u'speed of light in vacuum') # 299792458.0 m/s
  
 """
 Palnck's function -
