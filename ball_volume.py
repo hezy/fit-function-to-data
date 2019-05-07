@@ -8,40 +8,45 @@ this script fits a defined function to a given data with y error bars
 
 
 import numpy as np
-from pandas import read_csv
+#from pandas import read_csv
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
+"""
 # read data from csv file
 data = read_csv('sample01.csv', skiprows=1, header=None, sep=',', lineterminator='\n', names=["x","dx","y","dy"])
 x = data.iloc[:,0]
 dx = data.iloc[:,1]
 y = data.iloc[:,2]
 dy = data.iloc[:,3]
-
+"""
 
 # define a function
-def func(x, a1, a2, a3):
+def linfunc(x, a, b):
     # a polynumial function
-    return a1 * x**2 + a2*x + a3
+    return a*x + b
 
-"""
+# define a function
+def volume(r):
+    # a polynumial function
+    return 4/3*np.pi()*r**3
+
 # fabricate data with function + random noise
 # use in case there's no csv file ready
-x = np.arange(0.0, 20.0, 1.0)
-y = func(x, -1.5, 27.0, 12.0) + 0.8*x*np.random.randn(20)
-dx = np.full((20), 0.2)
-dy = x+1    # y error bars increase with x
-"""
+r = np.arange(1.0, 20.0, 1.0)
+v = volume(r) * (1 + np.random.normal(0, 0.05, None))
+dr = np.full((20), 0.2)
+dv = 9/4*r**2
+
 
 # fit data with function
-popt, pcov = curve_fit(func, x, y, p0=None, sigma=dy)
+popt, pcov = curve_fit(volume, r, v, p0=None, sigma=dv)
 popt
 
 # create figure
 fig, ax = plt.subplots(figsize=(16, 8))
-plt.errorbar(x, y, xerr=dx, yerr=dy, fmt='none', label='experiment')
-plt.plot(x,func(x, *popt), label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(popt))
+plt.errorbar(r, v, xerr=dr, yerr=dv, fmt='none', label='experiment')
+plt.plot(r,volume(r, *popt), label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(popt))
 
 # arange figure
 ax.grid(True)
