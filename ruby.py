@@ -21,12 +21,16 @@ y = data.iloc[:,1]
 x = np.arange(670.0 ,700.0 ,0.01)
 
 
-#Gaussian function
-def gauss_function(x, a, x0, sigma):
-    return a*np.exp(-(x-x0)**2/(2*sigma**2))
+# Gaussian
+def gauss_func(x, a, x0, sigma):
+    return 1 / sigma / np.sqrt(2*np.pi) * np.exp(-(x-x0)**2/(2*sigma**2))
+
+# Lorentzian
+def luretz_func(x, a, x0, gamma):
+    return gamma / np.pi / ((x-x0)**2 + gamma**2)
 
 def doublet(x,a1,x1,s1,a2,x2,s2):
-    return gauss_function(x, a1, x1, s1) + gauss_function(x, a2, x2, s2) 
+    return a1* gauss_func(x, x1, s1) + a2 * gauss_func(x, x2, s2) 
 
 # fabricate data
 y = doublet(x, 100.0, 679.0, 0.2, 200.0, 680.0, 0.2) + np.random.normal(loc=1.0, scale=3.0, size=x.size)
@@ -52,8 +56,8 @@ plt.plot(x,doublet(x, *popt), '-r')
 ax.grid(True)
 ax.legend(loc='best')
 ax.set_title('Ruby')
-ax.set_xlabel('Intensity (arb.)')
-ax.set_ylabel('wavelength (nm)')
+ax.set_xlabel('wavelength (nm)')
+ax.set_ylabel('Intensity (arb.)')
 
 plt.show()
 
