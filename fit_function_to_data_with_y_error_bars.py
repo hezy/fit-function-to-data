@@ -39,7 +39,7 @@ popt, pcov = curve_fit(func, x, y, p0=None, sigma=dy)
 popt
 
 # create figure
-fig, ax = plt.subplots(figsize=(16, 8))
+fig, ax = plt.subplots(figsize=(14, 8))
 plt.errorbar(x, y, xerr=dx, yerr=dy, fmt='none', label='experiment')
 plt.plot(x,func(x, *popt), label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(popt))
 
