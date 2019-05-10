@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Mar 9, 2019
+Created on Th May 8, 2019
 @author: Hezy Amiel
 ref:
 https://en.m.wikipedia.org/wiki/Voigt_profile
@@ -24,28 +24,28 @@ y = data.iloc[:,1]
 x = np.arange(670.0 ,700.0 ,0.1)
 
 
-# Voigt 
+# Voigt
 # This function is the best description for a peak in spectroscopy and diffraction experiments.
 # It is derived from the convolution of a Lorentzian function and a Gaussian function
 def voigt(x, x0, w):
     sigma = w / np.sqrt(2.0 * np.log(2))
-    gamma = w 
+    gamma = w
     return np.real(wofz(((x-x0) + 1j*gamma)/sigma/np.sqrt(2))) / sigma /np.sqrt(2*np.pi)
 
 # Gaussian
 def gauss(x, x0, w):
     return np.exp(-1.0 * np.log(2.0) * ((x-x0)/2)**2)
 
-# Lorentzian   
+# Lorentzian
 def loretz(x, x0, w):
     return 1 / (1 + ((x-x0)/w)**2)
 
-# Pseudo-Voigt 
+# Pseudo-Voigt
 # We will try to aproximate the Voigt function with this simple linear combination of Gaussian and Lorentzian
 # x0 = center position of the peak, eta = mixing parameter, 2w = full width at half maximum
-def pseudo_voigt(x ,x0, I0, eta, w):   
+def pseudo_voigt(x ,x0, I0, eta, w):
     return I0 * ( eta * loretz(x, x0 , w) + (1-eta) * gauss(x, x0, w) )
- 
+
 
 # fabricate data
 y = 100.0 * voigt(x, 689.4, 2.0) + 0.5 * np.random.normal(loc=0.0, scale=1.0, size=x.size)
