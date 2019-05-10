@@ -43,19 +43,17 @@ def loretz(x, x0, w):
 # Pseudo-Voigt 
 # We will try to aproximate the Voigt function with this simple linear combination of Gaussian and Lorentzian
 # x0 = center position of the peak, eta = mixing parameter, 2w = full width at half maximum
-def pseudo_voigt(x , x0, I0, eta, w):   
+def pseudo_voigt(x ,x0, I0, eta, w):   
     return I0 * ( eta * loretz(x, x0 , w) + (1-eta) * gauss(x, x0, w) )
  
 
 # fabricate data
-y = 100.0 * voigt_func(x, 689.4, 2.0) + 0.5 * np.random.normal(loc=0.0, scale=1.0, size=x.size)
-dy = np.ones(x.size)
+y = 100.0 * voigt(x, 689.4, 2.0) + 0.5 * np.random.normal(loc=0.0, scale=1.0, size=x.size)
+# dy = np.ones(x.size)
 
-def fit_func(x, x0, a, e, f):
-    return a * pseudo_voigt_func(x, x0, e, f)
 
 # fit data with function
-popt, pcov = curve_fit(fit_func, x, y, p0=(691.0, 80.0, 0.5, 0.5), sigma=dy)
+popt, pcov = curve_fit(pseudo_voigt, x, y, p0=(691.0, 80.0, 0.5, 2.0), sigma=None)
 popt
 
 
@@ -67,7 +65,7 @@ fsl = 14 #font size for axes labels
 
 fig, ax = plt.subplots(figsize=(16, 8))
 plt.plot(x, y, '.b')
-plt.plot(x,fit_func(x, *popt), '-r')
+plt.plot(x,pseudo_voigt(x, *popt), '-r')
 
 # arange figure
 ax.grid(True)
