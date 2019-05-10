@@ -5,6 +5,7 @@ Created on Sat Mar 9, 2019
 ref:
 https://en.m.wikipedia.org/wiki/Voigt_profile
 https://scipython.com/book/chapter-8-scipy/examples/the-voigt-profile/
+http://journals.iucr.org/j/issues/2000/06/00/nt0146/index.html
 """
 
 import numpy as np
@@ -22,34 +23,37 @@ y = data.iloc[:,1]
 x = np.arange(670.0 ,700.0 ,0.01)
 
 
-# Gaussian
-def gauss_func(x, a, x0, sigma):
-    return 1 / sigma / np.sqrt(2*np.pi) * np.exp(-(x-x0)**2/(2*sigma**2))
+# Normalized Gaussian
+# x = 
+def gauss_func(x, x0, sigma):
+    return 1 / sigma / np.sqrt(2.0 * np.pi) * np.exp(-(x-x0)**2/(2.0 * sigma**2))
 
-# Lorentzian
-def luretz_func(x, x0, gamma):
+# Normalized Lorentzian
+def loretz_func(x, x0, gamma):
     return gamma / np.pi / ((x-x0)**2 + gamma**2)
 
-# Pseudo-Voigt 
-def pseudo-voigt-func:
-    sigma = alpha / np/sqrt(2 * np.log(2))
-    return 
+# Normalized Pseudo-Voigt 
+# x0 = center position of the peak, eta = 
+def pseudo_voigt_func(x , x0, eta, fwhm):   
+    sigma = fwhm / (2.0 * np.sqrt(2.0 * np.log(2)))
+    gamma = fwhm / 2.0 
+    return eta * loretz_func(x, x0 , gamma) + (1-eta) * gauss_func(x, x0, sigma)
 
-# Voigt 
-def voigt-func(x,alpha):
-    sigma = alpha / np.sqrt(2 * np.log(2))
-    return np.real(wofz((x + 1j*gamma)/sigma/np.sqrt(2))) / sigma\
-                                                           /np.sqrt(2*np.pi)
+# Normalized Voigt 
+def voigt_func(x, x0, fwhm):
+    sigma = fwhm / (2.0 * np.sqrt(2.0 * np.log(2)))
+    gamma = fwhm / 2.0 
+    return np.real(wofz(((x-x0) + 1j*gamma)/sigma/np.sqrt(2))) / sigma /np.sqrt(2*np.pi)
  
 
-def doublet(x,a1,x1,s1,a2,x2,s2):
-    return a1* gauss_func(x, x1, s1) + a2 * gauss_func(x, x2, s2) 
-
 # fabricate data
-y = doublet(x, 100.0, 679.0, 0.2, 200.0, 680.0, 0.2) + np.random.normal(loc=1.0, scale=3.0, size=x.size)
+y = 100.0 * voigt_func(x, 689.0, 2.0) + np.random.normal(loc=1.0, scale=3.0, size=x.size)
+
+def fit_func(x, x0, a, e, f):
+    return a * pseudo_voigt_func(x, x0, e, f)
 
 # fit data with function
-popt, pcov = curve_fit(doublet, x, y, p0=(100.0, 679.0, 0.2, 200.0, 680.0, 0.2), sigma=1*x/x)
+popt, pcov = curve_fit(fit_func, x, y, p0=(689.0, 100, 0.5, 2.0), sigma=1*x/x)
 popt
 
 
@@ -63,7 +67,7 @@ fsl = 14 #font size for axes labels
 
 fig, ax = plt.subplots(figsize=(16, 8))
 plt.plot(x, y, '.b')
-plt.plot(x,doublet(x, *popt), '-r')
+plt.plot(x,fit_func(x, *popt), '-r')
 
 # arange figure
 ax.grid(True)
