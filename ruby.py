@@ -9,7 +9,7 @@ http://journals.iucr.org/j/issues/2000/06/00/nt0146/index.html
 """
 
 import numpy as np
-from pandas import read_csv
+#from pandas import read_csv
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.special import wofz
@@ -23,26 +23,26 @@ y = data.iloc[:,1]
 x = np.arange(670.0 ,700.0 ,0.1)
 
 
-# Normalized Voigt 
-# This function is the best description for a peak in spectroscopy and diffraction experiments
+# Voigt 
+# This function is the best description for a peak in spectroscopy and diffraction experiments.
 # It is derived from the convolution of a Lorentzian function and a Gaussian function
 def voigt_func(x, x0, fwhm):
     sigma = fwhm / (2.0 * np.sqrt(2.0 * np.log(2)))
     gamma = fwhm / 2.0 
     return np.real(wofz(((x-x0) + 1j*gamma)/sigma/np.sqrt(2))) / sigma /np.sqrt(2*np.pi)
 
-# Normalized Gaussian
+# Gaussian
 # x = 
 def gauss_func(x, x0, sigma):
     return 1 / sigma / np.sqrt(2.0 * np.pi) * np.exp(-(x-x0)**2/(2.0 * sigma**2))
 
-# Normalized Lorentzian
+# Lorentzian
 def loretz_func(x, x0, gamma):
     return gamma / np.pi / ((x-x0)**2 + gamma**2)
 
-# Normalized Pseudo-Voigt 
+# Pseudo-Voigt 
 # We will try to aproximate the Voigt function with this simple linear combination of Gaussian and Lorentzian
-# x0 = center position of the peak, eta = 
+# x0 = center position of the peak, eta = mixing factor, fwhm = full width at half maximum
 def pseudo_voigt_func(x , x0, eta, fwhm):   
     sigma = fwhm / (2.0 * np.sqrt(2.0 * np.log(2)))
     gamma = fwhm / 2.0 
