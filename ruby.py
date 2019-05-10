@@ -20,8 +20,16 @@ data = read_csv('ruby01.csv', skiprows=1, header=None, sep=',', lineterminator='
 x = data.iloc[:,0]
 y = data.iloc[:,1]
 """
-x = np.arange(670.0 ,700.0 ,0.01)
+x = np.arange(670.0 ,700.0 ,0.1)
 
+
+# Normalized Voigt 
+# This function is the best description for a peak in spectroscopy and diffraction experiments
+# It is derived from the convolution of a Lorentzian function and a Gaussian function
+def voigt_func(x, x0, fwhm):
+    sigma = fwhm / (2.0 * np.sqrt(2.0 * np.log(2)))
+    gamma = fwhm / 2.0 
+    return np.real(wofz(((x-x0) + 1j*gamma)/sigma/np.sqrt(2))) / sigma /np.sqrt(2*np.pi)
 
 # Normalized Gaussian
 # x = 
@@ -33,35 +41,28 @@ def loretz_func(x, x0, gamma):
     return gamma / np.pi / ((x-x0)**2 + gamma**2)
 
 # Normalized Pseudo-Voigt 
+# We will try to aproximate the Voigt function with this simple linear combination of Gaussian and Lorentzian
 # x0 = center position of the peak, eta = 
 def pseudo_voigt_func(x , x0, eta, fwhm):   
     sigma = fwhm / (2.0 * np.sqrt(2.0 * np.log(2)))
     gamma = fwhm / 2.0 
     return eta * loretz_func(x, x0 , gamma) + (1-eta) * gauss_func(x, x0, sigma)
-
-# Normalized Voigt 
-def voigt_func(x, x0, fwhm):
-    sigma = fwhm / (2.0 * np.sqrt(2.0 * np.log(2)))
-    gamma = fwhm / 2.0 
-    return np.real(wofz(((x-x0) + 1j*gamma)/sigma/np.sqrt(2))) / sigma /np.sqrt(2*np.pi)
  
 
 # fabricate data
-y = 100.0 * voigt_func(x, 689.0, 2.0) + np.random.normal(loc=1.0, scale=3.0, size=x.size)
+y = 100.0 * voigt_func(x, 689.4, 2.0) + np.random.normal(loc=0.0, scale=1.0, size=x.size)
 
 def fit_func(x, x0, a, e, f):
     return a * pseudo_voigt_func(x, x0, e, f)
 
 # fit data with function
-popt, pcov = curve_fit(fit_func, x, y, p0=(689.0, 100, 0.5, 2.0), sigma=1*x/x)
+popt, pcov = curve_fit(fit_func, x, y, p0=(100, 800, 0.5, 0.5), sigma=1*x/x)
 popt
 
 
 # configuring the figure
 plt.close('all')
 plt.rcParams.update({'font.size': 12})
-fig, axs = plt.subplots(nrows=2, ncols=1, sharex=False, figsize=(8, 12))
-plt.subplots_adjust(left=None, bottom=None, right=None, top=0.95, wspace=None, hspace=0.3)
 fst = 16 #font size for title
 fsl = 14 #font size for axes labels
 
