@@ -2,15 +2,16 @@
 """
 Created on Sat Mar 9, 2019
 @author: Hezy Amiel
-fit_function_to_data_with_y_error_bars.py
-this script fits a defined function to a given data with y error bars
+ref:
+https://en.m.wikipedia.org/wiki/Voigt_profile
+https://scipython.com/book/chapter-8-scipy/examples/the-voigt-profile/
 """
-
 
 import numpy as np
 from pandas import read_csv
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from scipy.special import wofz
 
 """
 # read data from csv file
@@ -26,8 +27,20 @@ def gauss_func(x, a, x0, sigma):
     return 1 / sigma / np.sqrt(2*np.pi) * np.exp(-(x-x0)**2/(2*sigma**2))
 
 # Lorentzian
-def luretz_func(x, a, x0, gamma):
+def luretz_func(x, x0, gamma):
     return gamma / np.pi / ((x-x0)**2 + gamma**2)
+
+# Pseudo-Voigt 
+def pseudo-voigt-func:
+    sigma = alpha / np/sqrt(2 * np.log(2))
+    return 
+
+# Voigt 
+def voigt-func(x,alpha):
+    sigma = alpha / np.sqrt(2 * np.log(2))
+    return np.real(wofz((x + 1j*gamma)/sigma/np.sqrt(2))) / sigma\
+                                                           /np.sqrt(2*np.pi)
+ 
 
 def doublet(x,a1,x1,s1,a2,x2,s2):
     return a1* gauss_func(x, x1, s1) + a2 * gauss_func(x, x2, s2) 
