@@ -81,6 +81,6 @@ print (pcov)
 
 """
 # printing the fit parameters with their error estimates
-for i in range(0,3):
+for i in range(x0, I0, eta, w):
     print ('a' + str(i) + '= ' + str(popt[i]) + ' +/- ' + str(pcov[i,i]))
 """
