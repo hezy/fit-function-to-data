@@ -11,15 +11,14 @@ for each curve, and use it to plot Wien's law: λmax = b/T
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
- 
-# Planck's constant
-h = 6.62607015e-34 # J*s
- 
-# Boltzmann's constant
-k = 1.380648528e-23 # J/K
- 
-# the speed of light in vacuum
-c = 299792458 # m/s
+from scipy import constants
+
+
+h = constants.value(u'Planck constant') # 6.62607004e-34 J*s
+k = constants.value(u'Boltzmann constant') # k = 1.38064852e-23 J/K
+c = constants.value(u'speed of light in vacuum') # 299792458.0 m/s
+b = constants.value(u'Wien wavelength displacement law constant') # 0.0028977729 m*K
+
  
 """
 Palnck's function -
@@ -35,8 +34,8 @@ def planck(lam, T):
   
 """    
 a function for fitting Wien's curve λmax = b/T
-a is due to approximation error, b = Wien's constant (K*nm), to be evaluated. 
-expected value is b = 2.8977729(17)e−3 K*m
+a is due to approximation error, b = Wien's constant (nm*K), to be evaluated. 
+expected value is b = 2.8977729e−3 m*K
 """
 def wien(x, a, b):
     return a + b/x
@@ -50,15 +49,15 @@ fst = 16 #font size for title
 fsl = 14 #font size for axes labels
     
 # create Planck's curves for different temperatures
-x = np.arange(1, 30101 , 100) # wavelength (nm)
-xfit = np.arange(1, 30101, 1) # wavelength (nm)
+x = np.arange(1, 12101 , 100) # wavelength (nm)
+xfit = np.arange(1, 12101, 1) # wavelength (nm)
 
 
-T = np.arange(100, 10100, 1000) # temperature (K)
+T = np.arange(300, 6000, 300) # temperature (K)
 Lmax = np.array([])
 for t in T:
     # creating Planck's cureve for temperature = t (adding a random noise)
-    y = (planck(x,t)) #*(1 + np.random.normal(0, 0.05, None)) 
+    y = (planck(x,t)) # *(1 + np.random.normal(0, 0.05, None)) 
     axs[0].plot(x, y, ".") 
     
     # fitting Planck's curve for t
@@ -74,7 +73,7 @@ for t in T:
 
 # fitting Wien's curve with a 1/T function 
 axs[1].plot(T, Lmax, "bo")
-Tfit = np.arange(1, 12000, 100) # temperature (K)
+Tfit = np.arange(100, 6300, 100) # temperature (K)
 popt, pcov = curve_fit(wien, T, Lmax)
 print(popt)
 print(pcov)
@@ -92,8 +91,9 @@ axs[0].set_ylabel(r'$spectral \: radiance \: (W/sr/m^3)$', fontsize=fsl)
 axs[1].grid(True)
 axs[1].set_title("Wien’s Law", fontsize=fst)
 axs[1].set_xlabel("Temperature (K)", fontsize=fsl)
-axs[1].set_xlim(1,10000)
+axs[1].set_xlim(1,6000)
 axs[1].set_ylabel(r'$\lambda_{max} \: (nm)$',fontsize=fsl)
-axs[1].set_yscale('log')
+axs[1].set_ylim(0,10000)
+#axs[1].set_yscale('log')
 
 plt.show()
