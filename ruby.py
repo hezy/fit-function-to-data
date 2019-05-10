@@ -50,13 +50,14 @@ def pseudo_voigt_func(x , x0, eta, fwhm):
  
 
 # fabricate data
-y = 100.0 * voigt_func(x, 689.4, 2.0) + np.random.normal(loc=0.0, scale=1.0, size=x.size)
+y = 100.0 * voigt_func(x, 689.4, 2.0) + 0.5 * np.random.normal(loc=0.0, scale=1.0, size=x.size)
+dy = np.ones(x.size)
 
 def fit_func(x, x0, a, e, f):
     return a * pseudo_voigt_func(x, x0, e, f)
 
 # fit data with function
-popt, pcov = curve_fit(fit_func, x, y, p0=(100, 800, 0.5, 0.5), sigma=1*x/x)
+popt, pcov = curve_fit(fit_func, x, y, p0=(691.0, 80.0, 0.5, 0.5), sigma=dy)
 popt
 
 
