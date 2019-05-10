@@ -63,7 +63,7 @@ plt.rcParams.update({'font.size': 12})
 fst = 16 #font size for title
 fsl = 14 #font size for axes labels
 
-fig, ax = plt.subplots(figsize=(16, 8))
+fig, ax = plt.subplots(figsize=(14, 8))
 plt.plot(x, y, '.b')
 plt.plot(x,pseudo_voigt(x, *popt), '-r')
 
