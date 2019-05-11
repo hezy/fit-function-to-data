@@ -13,26 +13,33 @@ from scipy.special import wofz
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
-def lorentz(x, gamma):
-    return 1. / (1. + np.square(x/gamma)) 
+def lorentz(x, w):
+    # w = FWHM
+    return 1. /(1. + np.square(x/w)) 
 
-def gauss(x, sigma):
-    return np.exp(-np.log(2.)*np.square(x/sigma))
+def gauss(x, w):
+    return np.exp(-np.log(2.)*np.square(x/w))
 
 def voigt(x, a, b, c):
-    return c * np.sqrt(np.log(2) * np.pi) * np.real(wofz(np.sqrt(np.log(2)) * (a*x + 1j*b)))
+    """
+    for Lorentz a=b=28505100 c=np.sqrt(np.pi*np.log(2))*28505100
+    for Gauss a=1, b=0, c=1
+    """
+    s = np.sqrt(np.log(2))
+    return c * np.real(wofz(s*(a*x/2 + 1j*b)))
 
 x = np.arange (-8.0, 8.0 , 0.1)
 xfit = np.arange (-8.0, 8.0 , 0.01)
 
-yL = lorentz(x,1.)
-yG = gauss(x,1.)
+yL = lorentz(x,2.)
+yG = gauss(x,2.)
 
-popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(1., 1., 1.), sigma=None)
+guess = 28505100
+popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(guess, guess, guess*np.sqrt(np.pi*np.log(2))), sigma=None)
 yVL = voigt(xfit, *popt_L)
 
-popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 1., 1.), sigma=None)
-yVG = voigt(xfit, *popt_G)
+popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 0, 1.), sigma=None)
+yVG = voigt(xfit, 1., 0, 1.)
 
 plt.close('all')
 plt.grid(True)
