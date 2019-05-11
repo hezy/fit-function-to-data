@@ -9,8 +9,9 @@ http://journals.iucr.org/j/issues/2000/06/00/nt0146/nt0146.pdf
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 from scipy.special import wofz
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
 
 def lorentz(x, gamma):
     return 1. / (1. + np.square(x/gamma)) 
@@ -18,18 +19,16 @@ def lorentz(x, gamma):
 def gauss(x, sigma):
     return np.exp(-np.log(2.)*np.square(x/sigma))
 
-def voigt(x, sigma, gamma):
-    c =np.sqrt(np.log(2.))
-    a = 2. * c * x / sigma 
-    b = c * gamma / sigma
-    return 2./sigma * np.sqrt(np.log(2.))/np.sqrt(np.pi) * wofz(a + 1j * b)
-
+def voigt(x, a, b, c):
+    return c * np.real(wofz(a*x + 1j * b))
 
 x = np.arange (-8.0, 8.0 , 0.01)
 
 yL = lorentz(x,1.)
 yG = gauss(x,1.)
-yV = voigt(x,0.1,1.)
+
+popt, pcov = curve_fit(voigt, x, yG, p0=(1., 1., 1.), sigma=None)
+yV = voigt(x, *popt)
 
 plt.close('all')
 plt.grid(True)
