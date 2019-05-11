@@ -20,7 +20,7 @@ def gauss(x, sigma):
     return np.exp(-np.log(2.)*np.square(x/sigma))
 
 def voigt(x, a, b, c):
-    return c * np.real(wofz(a*x + 1j * b))
+    return c * np.sqrt(np.log(2) * np.pi) * np.real(wofz(np.sqrt(np.log(2)) * (a*x + 1j*b)))
 
 x = np.arange (-8.0, 8.0 , 0.1)
 xfit = np.arange (-8.0, 8.0 , 0.01)
@@ -41,3 +41,8 @@ plt.plot(xfit,yVL,'-r')
 plt.plot(x,yG,'ob')
 plt.plot(xfit,yVG,'-b')
 plt.show()
+
+print(popt_L)
+print(pcov_L)
+print(popt_G)
+print(pcov_G)
