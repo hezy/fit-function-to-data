@@ -22,17 +22,22 @@ def gauss(x, sigma):
 def voigt(x, a, b, c):
     return c * np.real(wofz(a*x + 1j * b))
 
-x = np.arange (-8.0, 8.0 , 0.01)
+x = np.arange (-8.0, 8.0 , 0.1)
+xfit = np.arange (-8.0, 8.0 , 0.01)
 
 yL = lorentz(x,1.)
 yG = gauss(x,1.)
 
-popt, pcov = curve_fit(voigt, x, yG, p0=(1., 1., 1.), sigma=None)
-yV = voigt(x, *popt)
+popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(1., 1., 1.), sigma=None)
+yVL = voigt(xfit, *popt_L)
+
+popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 1., 1.), sigma=None)
+yVG = voigt(xfit, *popt_G)
 
 plt.close('all')
 plt.grid(True)
-plt.plot(x,yL,'.r')
-plt.plot(x,yG,'.b')
-plt.plot(x,yV,'.g')
+plt.plot(x,yL,'or')
+plt.plot(xfit,yVL,'-r')
+plt.plot(x,yG,'ob')
+plt.plot(xfit,yVG,'-b')
 plt.show()
