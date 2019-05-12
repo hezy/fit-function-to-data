@@ -21,7 +21,7 @@ data = read_csv('ruby01.csv', skiprows=1, header=None, sep=',', lineterminator='
 x = data.iloc[:,0]
 y = data.iloc[:,1]
 """
-x = np.arange(670.0 ,700.0 ,0.1)
+x = np.arange(690.0 ,710.0 ,0.1)
 
 
 # Voigt
@@ -48,12 +48,12 @@ def pseudo_voigt(x ,x0, I0, eta, w):
 
 
 # fabricate data
-y = 100.0 * voigt(x, 689.4, 2.0) + 0.5 * np.random.normal(loc=0.0, scale=1.0, size=x.size)
+y = 100.0 * voigt(x, 694.0, 0.2) + 0.5 * np.random.normal(loc=0.0, scale=1.0, size=x.size)
 # dy = np.ones(x.size)
 
 
 # fit data with function
-popt, pcov = curve_fit(pseudo_voigt, x, y, p0=(691.0, 80.0, 0.5, 2.0), sigma=None)
+popt, pcov = curve_fit(pseudo_voigt, x, y, p0=(694.0, 80.0, 0.5, 0.2), sigma=None)
 popt
 
 
@@ -70,7 +70,7 @@ plt.plot(x,pseudo_voigt(x, *popt), '-r')
 # arange figure
 ax.grid(True)
 ax.legend(loc='best')
-ax.set_title('Ruby')
+ax.set_title('')
 ax.set_xlabel('wavelength (nm)')
 ax.set_ylabel('Intensity (arb.)')
 
