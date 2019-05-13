@@ -21,41 +21,45 @@ data = read_csv('ruby01.csv', skiprows=1, header=None, sep=',', lineterminator='
 x = data.iloc[:,0]
 y = data.iloc[:,1]
 """
-x = np.arange(690.0 ,710.0 ,0.1)
+x = np.arange(-10. ,10. ,0.05)
 
 
 # Voigt
 # This function is the best description for a peak in spectroscopy and diffraction experiments.
 # It is derived from the convolution of a Lorentzian function and a Gaussian function
 def voigt(x, x0, w):
-    sigma = w / np.sqrt(2.0 * np.log(2))
+    sigma = w / np.sqrt(2.0 * np.log(2.))
     gamma = w
-    return np.real(wofz(((x-x0) + 1j*gamma)/sigma/np.sqrt(2))) / sigma /np.sqrt(2*np.pi)
+    return np.real(wofz(((x-x0) + 1.0j*gamma)/sigma/np.sqrt(2.))) / sigma /np.sqrt(2.*np.pi)
 
 # Gaussian
-def gauss(x, x0, w):
-    return np.exp(-1.0 * np.log(2.0) * ((x-x0)/2)**2)
+def gauss(x, x0, I0, w):
+    sigma = w / np.sqrt(2.0 * np.log(2.))
+    return I0 * (1. / sigma / np.sqrt(2.*np.pi)) * np.exp(-1.0 * ((x-x0)/(2.*sigma)**2.)
 
 # Lorentzian
-def loretz(x, x0, w):
-    return 1 / (1 + ((x-x0)/w)**2)
+def lorentz(x, x0, I0, w):
+    gamma = w
+    return I0 / ((np.pi * gamma) * (1. + (np.square((x-x0)/gamma))))
 
 # Pseudo-Voigt
 # We will try to aproximate the Voigt function with this simple linear combination of Gaussian and Lorentzian
 # x0 = center position of the peak, eta = mixing parameter, 2w = full width at half maximum
 def pseudo_voigt(x ,x0, I0, eta, w):
-    return I0 * ( eta * loretz(x, x0 , w) + (1-eta) * gauss(x, x0, w) )
+    return I0 * ( eta * lorentz(x, x0 , w) + (1.0-eta) * gauss(x, x0, w) )
 
 
 # fabricate data
-y = 100.0 * voigt(x, 694.0, 0.2) + 0.5 * np.random.normal(loc=0.0, scale=1.0, size=x.size)
+y = 1. * voigt(x, 0.0, 2.0) # + 0.5 * np.random.normal(loc=0.0, scale=1.0, size=x.size)
 # dy = np.ones(x.size)
 
 
 # fit data with function
-popt, pcov = curve_fit(pseudo_voigt, x, y, p0=(694.0, 80.0, 0.5, 0.2), sigma=None)
-popt
 
+
+popt1, pcov1 = curve_fit(gauss, x, y, p0=(0.0, 1.0, 2.0), sigma=None)
+popt2, pcov2 = curve_fit(lorentz, x, y, p0=(0.0, 1.0, 2.0), sigma=None)
+popt3, pcov3 = curve_fit(pseudo_voigt, x, y, p0=(0.0, 1.0, 0.5, 2.0), sigma=None)
 
 # configuring the figure
 plt.close('all')
@@ -64,8 +68,10 @@ fst = 16 #font size for title
 fsl = 14 #font size for axes labels
 
 fig, ax = plt.subplots(figsize=(14, 8))
-plt.plot(x, y, '.b')
-plt.plot(x,pseudo_voigt(x, *popt), '-r')
+plt.plot(x, y, '.')
+plt.plot(x,gauss(x, *popt1), '-g')
+plt.plot(x,lorentz(x, *popt2), '-b')
+plt.plot(x,pseudo_voigt(x, *popt3), '-r')
 
 # arange figure
 ax.grid(True)
@@ -76,8 +82,8 @@ ax.set_ylabel('Intensity (arb.)')
 
 plt.show()
 
-print (popt)
-print (pcov)
+print (popt1)
+print (pcov1)
 
 """
 # printing the fit parameters with their error estimates
