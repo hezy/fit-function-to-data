@@ -13,33 +13,39 @@ from scipy.special import wofz
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
-def lorentz(x, w):
-    # w = FWHM
-    return 1. /(1. + np.square(x/w)) 
+def lorentz(x, gamma):
+    #w = FWHM
+#    return 1. /(1. + np.square(x/w)) 
+    return gamma/np.pi/(np.square(x) + np.square(gamma)) 
 
-def gauss(x, w):
-    return np.exp(-np.log(2.)*np.square(x/w))
 
-def voigt(x, a, b, c):
+def gauss(x, sigma):
+#    return np.exp(-np.log(2.)*np.square(x/w))
+    return (np.exp(-np.square(x)/2/np.square(sigma)))/(sigma*np.sqrt(2*np.pi))
+
+def voigt(x, sigma, gamma, c):
     """
-    for Lorentz a=b=28505100 c=np.sqrt(np.pi*np.log(2))*28505100
-    for Gauss a=1, b=0, c=1
+    for Lorentz sigma=0, gamma=1, c=1
+    for Gauss sigma=1, gamma=0, c=1
     """
-    s = np.sqrt(np.log(2))
-    return c * np.real(wofz(s*(a*x/2 + 1j*b)))
+#    s = np.sqrt(np.log(2))
+#    return c * np.real(wofz(s*(a*x/2 + 1j*b)))
+    return c * np.real(wofz((x + 1j*gamma)/(sigma * np.sqrt(2)))) / (sigma * np.sqrt(2*np.pi))
 
-x = np.arange (-8.0, 8.0 , 0.1)
-xfit = np.arange (-8.0, 8.0 , 0.01)
 
-yL = lorentz(x,2.)
-yG = gauss(x,2.)
+x = np.arange (-12.0, 12.0 , 0.2)
+xfit = np.arange (-12.0, 12.0 , 0.01)
 
-guess = 28505100
-popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(guess, guess, guess*np.sqrt(np.pi*np.log(2))), sigma=None)
+yL = lorentz(x,1.)
+yG = gauss(x,1.)
+yVtest = voigt(xfit, 1.0, 1.0, 1.0)
+
+popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(1e-9, 1.0, 1.0), sigma=None)
 yVL = voigt(xfit, *popt_L)
 
-popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 0, 1.), sigma=None)
-yVG = voigt(xfit, 1., 0, 1.)
+
+popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 1e-9, 1.), sigma=None)
+yVG = voigt(xfit, *popt_G)
 
 plt.close('all')
 fig, ax = plt.subplots(figsize=(14, 8))
@@ -54,9 +60,13 @@ ax.plot(x,yL,'or')
 ax.plot(xfit,yVL,'-r')
 ax.plot(x,yG,'ob')
 ax.plot(xfit,yVG,'-b')
+
+ax.plot(xfit,yVtest,'-g')
 plt.show()
 
+print('Lorentzian:')
 print(popt_L)
 print(pcov_L)
+print('Gaussian:')
 print(popt_G)
 print(pcov_G)
