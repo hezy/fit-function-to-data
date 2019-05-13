@@ -12,7 +12,7 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
 # read data from csv file
-data = read_csv('0GPa.csv', skiprows=None, header=None, sep='\t', lineterminator='\n', names=["lambda","intensity"])
+data = read_csv('6.6b.csv', skiprows=None, header=None, sep='\t', lineterminator='\n', names=["lambda","intensity"])
 x = data.iloc[:,0]
 y = data.iloc[:,1]
 
