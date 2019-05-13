@@ -32,13 +32,14 @@ popt, pocv = curve_fit(ruby, x, y, p0=(692.2, 0.178, 0.1, 2689.0, 693.7, 0.247, 
 print(popt)
 print(pocv)
 
-dif = ruby(x, *popt) - y
+yfit = ruby(x, *popt)
+ydif = yfit - y
 
 # create figure
 fig, ax = plt.subplots(figsize=(14, 8))
 plt.plot(x, y, 'ob', label='experiment')
-plt.plot(x,ruby(x, *popt), '-r', label='fit')
-plt.plot(x, dif, '-g', label='difference')
+plt.plot(x, yfit, '-r', label='fit')
+plt.plot(x, ydif, '-g', label='difference')
 
 # arange figure
 ax.grid(True)
