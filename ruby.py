@@ -12,7 +12,7 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
 # read data from csv file
-data = read_csv('0GPa.csv', skiprows=None, header=None, sep='\t', lineterminator='\n', names=["lambda","intensity"])
+data = read_csv('6.6GPa-a.csv', skiprows=None, header=None, sep='\t', lineterminator='\n', names=["lambda","intensity"])
 x = data.iloc[:,0]
 y = data.iloc[:,1]
 
@@ -37,7 +37,7 @@ ydif = yfit - y
 
 # create figure
 fig, ax = plt.subplots(figsize=(14, 8))
-plt.plot(x, y, 'ob', label='experiment')
+plt.plot(x, y, '.b', label='experiment')
 plt.plot(x, yfit, '-r', label='fit')
 plt.plot(x, ydif, '-g', label='difference')
 
