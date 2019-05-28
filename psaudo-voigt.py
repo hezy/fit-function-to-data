@@ -25,30 +25,35 @@ def gauss(x, w):
     return np.exp(-np.log(2.)*np.square(x/w))
 
 
-def voigt(x, sigma, gamma):
+def voigt(x, c, sigma, gamma):
     # Voigt with max = 1 and w=FWHM=1???: 
-    return np.real(wofz(np.sqrt(np.log(2))*(sigma*x/2 + 1j*gamma)))
+    return c * np.real(wofz(np.sqrt(np.log(2))*(sigma*x/2 + 1j*gamma)))
     # normolized Voigt (integral = 1):
     # return c * np.real(wofz((x + 1j*gamma)/(sigma * np.sqrt(2)))) / (sigma * np.sqrt(2*np.pi))
     # for Lorentz sigma=0, gamma=1, c=1
     # for Gauss sigma=1, gamma=0, c=1
 
 
-def psudo_voigt(x, w, n):
-    n * gauss(x,w) + (n-1) * lorentz(x,w) 
+def pseudo_voigt(x, c, w, n):
+    c * (n * gauss(x,w) + (1-n) * lorentz(x,w)) 
 
-x = np.arange (-12.0, 12.0 , 0.2)
-xfit = np.arange (-12.0, 12.0 , 0.01)
+x = np.arange (-6.0, 6.0 , 0.2)
+xfit = np.arange (-6.0, 6.0 , 0.01)
 
 yL = lorentz(x,1.0)
 yG = gauss(x,1.0)
-yV = voigt(x, 0.5, 1.0)
+yV = voigt(x, 1.0, 0.5, 1.0)
 
-popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(1e-9, 1.0), sigma=None)
-yVL = voigt(xfit, *popt_L)
+#popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(1., 1e-9, 1.), sigma=None, bounds=(0,100))
+popt_L, pcov_L = curve_fit(pseudo_voigt, x, yL, p0=(1., 1., 0.))
+#yVL = voigt(xfit, *popt_L)
+yVL = pseudo_voigt(xfit, *popt_L)
 
-popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 1e-9), sigma=None)
-yVG = voigt(xfit, *popt_G)
+#popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 2., 1e-9), sigma=None, bounds=(0,100))
+popt_G, pcov_G = curve_fit(pseudo_voigt, x, yG, p0=(1., 1., 1.))
+#yVG = voigt(xfit, *popt_G)
+yVG = pseudo_voigt(xfit, *popt_G)
+
 
 plt.close('all')
 fig, ax = plt.subplots(figsize=(14, 8))
