@@ -61,8 +61,8 @@ Lmax = np.array([])
 
 for t in T:
     # creating Planck's curve for temperature = t (with some random noise)
-    y = (planck(x,t)) *(1 + np.random.normal(0, 0.1, None)) 
-    axs[0].plot(x, y, ".") 
+    y = (planck(x,t)) * (1 + np.random.normal(0, 0.1, None)) 
+    axs[0].plot(x, y, "o")
     
     # fitting Planck's curve for t
     popt, pcov = curve_fit(planck, x, y, 2000)
@@ -72,7 +72,7 @@ for t in T:
     
     # finding the wavelength of maximal radiance for Planck's curve and appending to Wien's curve 
     L = np.argmax(yfit) 
-    Lmax = np.append(Lmax,np.argmax(yfit))
+    Lmax = np.append(Lmax,np.argmax(yfit)) # TODO
 
 
 # fitting Wien's curve with a + b/T 
