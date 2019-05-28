@@ -37,22 +37,19 @@ def voigt(x, c, sigma, gamma):
 def pseudo_voigt(x, c, w, n):
     c * (n * gauss(x,w) + (1-n) * lorentz(x,w)) 
 
-x = np.arange (-6.0, 6.0 , 0.2)
-xfit = np.arange (-6.0, 6.0 , 0.01)
+x = np.arange (-10.0, 10.0 , 0.2)
+xfit = np.arange (-10.0, 10.0 , 0.01)
 
 yL = lorentz(x,1.0)
 yG = gauss(x,1.0)
 yV = voigt(x, 1.0, 0.5, 1.0)
 
-#popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(1., 1e-9, 1.), sigma=None, bounds=(0,100))
-popt_L, pcov_L = curve_fit(pseudo_voigt, x, yL, p0=(1., 1., 0.))
-#yVL = voigt(xfit, *popt_L)
-yVL = pseudo_voigt(xfit, *popt_L)
+popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(1., 1e-9, 1.), sigma=None, bounds=(0,100))
+yVL = voigt(xfit, *popt_L)
 
-#popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 2., 1e-9), sigma=None, bounds=(0,100))
-popt_G, pcov_G = curve_fit(pseudo_voigt, x, yG, p0=(1., 1., 1.))
-#yVG = voigt(xfit, *popt_G)
-yVG = pseudo_voigt(xfit, *popt_G)
+
+popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 2., 1e-9), sigma=None, bounds=(0,100))
+yVG = voigt(xfit, *popt_G)
 
 
 plt.close('all')
