@@ -4,7 +4,8 @@ Created on Mon May 27 14:18:38 2019
 author: hezy1a
 """
 
-from sympy import init_printing, symbols, Integral, oo, exp, Eq, latex, Rational
+from sympy import init_printing, symbols, Integral, oo, exp, Eq, solve, Rational, latex
+from IPython.display import display
 init_printing(use_unicode=True) #???
 
 x = symbols('x') 
@@ -39,5 +40,5 @@ display(G_HWHM)
 display(solve(G_HWHM, x))
 
 
-# example: generating LaTeX code:
+# example: generating LaTeX code for the displayed equations:
 #print(latex(Eq(L_int, L_norm )))
