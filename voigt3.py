@@ -13,6 +13,5 @@ from sympy import *
 
 x = Symbol('x')
 gamma = Symbol('gamma')
-L = Symbol('L')
 L = 1/(x**2 + gamma**2)
-L_norm = integrate(L, (x, -oo, oo))
+L_norm = Integral(L, (x, -oo, oo))
