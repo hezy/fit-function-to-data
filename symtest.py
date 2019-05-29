@@ -6,7 +6,7 @@ author: hezy1a
 
 from sympy import init_printing, symbols, Integral, oo, exp, Eq, solve, Rational, latex
 from IPython.display import display
-init_printing(use_latex=True, latex_mode='equation*', fontsize='10', forecolor='White') 
+init_printing(use_latex=True, latex_mode='equation*', forecolor='White') 
 #remove "White" if your background is white
 
 x = symbols('x') 
