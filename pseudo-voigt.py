@@ -15,41 +15,47 @@ from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
 
 
-def lorentz(x, w):
+def lorentz(x, wL):
     # Lorentz with max=1 and w=FWHM: 
-    return 1. /(1. + np.square(x/w)) 
+    gamma = wL
+    return 1 /(1 + np.square(x/gamma)) 
     
 
-def gauss(x, w):
-    # Gauss with max=1 and w=FWHM: 
-    return np.exp(-np.log(2.)*np.square(x/w))
+def gauss(x, wG):
+    # Gauss with max=1 and w=FWHM
+    sigma = wG/np.sqrt(2*np.log(2))
+    return np.exp(- x**2 / (2* sigma**2))
 
 
-def voigt(x, c, sigma, gamma):
+def voigt(x, wL, wG):
     # Voigt with max = 1 and w=FWHM=1???: 
-    return c * np.real(wofz(np.sqrt(np.log(2))*(sigma*x/2 + 1j*gamma)))
+    gamma = wL
+    sigma = wG/np.sqrt(2*np.log(2))
+    z = (x + 1j*gamma)/np.sqrt(2)/sigma
+    return np.pi/gamma * np.real(wofz(z))/np.sqrt(2*np.pi)/sigma
     # normolized Voigt (integral = 1):
     # return c * np.real(wofz((x + 1j*gamma)/(sigma * np.sqrt(2)))) / (sigma * np.sqrt(2*np.pi))
     # for Lorentz sigma=0, gamma=1, c=1
     # for Gauss sigma=1, gamma=0, c=1
 
 
-def pseudo_voigt(x, c, w, n):
-    c * (n * gauss(x,w) + (1-n) * lorentz(x,w)) 
+def pseudo_voigt(x, w, n):
+    n * gauss(x, w) + (1-n) * lorentz(x,w)
 
-x = np.arange (-10.0, 10.0 , 0.2)
-xfit = np.arange (-10.0, 10.0 , 0.01)
+x = np.arange (-12.0, 12.0 , 0.05)
+xfit = np.arange (-12.0, 12.0 , 0.01)
 
-yL = lorentz(x,1.0)
-yG = gauss(x,1.0)
-yV = voigt(x, 1.0, 0.5, 1.0)
+w = 1.0
+yL = lorentz(x, w)
+yG = gauss(x, w)
+yV = voigt(x, 1, 1)
 
-popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(1., 1e-9, 1.), sigma=None, bounds=(0,100))
-yVL = voigt(xfit, *popt_L)
+#popt_L, pcov_L = curve_fit(voigt, x, yL, p0=(1., 1e-9, 1.), sigma=None, bounds=(0,100))
+#yVL = voigt(xfit, *popt_L)
 
 
-popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 2., 1e-9), sigma=None, bounds=(0,100))
-yVG = voigt(xfit, *popt_G)
+#popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 2., 1e-9), sigma=None, bounds=(0,100))
+#yVG = voigt(xfit, *popt_G)
 
 
 plt.close('all')
@@ -61,17 +67,17 @@ ax.set_xlabel("x", fontsize=14)
 #ax.set_xlim()
 ax.set_ylabel("y", fontsize=14)
 #ax.set_ylim()
-ax.plot(x,yL,'or')
-ax.plot(xfit,yVL,'-r')
-ax.plot(x,yG,'ob')
-ax.plot(xfit,yVG,'-b')
+ax.plot(x,yL,'-r')
+#ax.plot(xfit,yVL,'-r')
+ax.plot(x,yG,'-b')
+#ax.plot(xfit,yVG,'-b')
 
-ax.plot(x,yV,'-g')
+ax.plot(x,yV,'.g')
 plt.show()
 
-print('Lorentzian:')
-print(popt_L)
-print(pcov_L)
-print('Gaussian:')
-print(popt_G)
-print(pcov_G)
+#print('Lorentzian:')
+#print(popt_L)
+#print(pcov_L)
+#print('Gaussian:')
+#print(popt_G)
+#print(pcov_G)

@@ -22,7 +22,8 @@ L_norm = L_int.doit()
 display(Eq(L_int, L_norm ))
 
 # calculating the half width at half maximum (HWHM) of a Lorenzian
-L_HWHM = Eq(lorentz(x,gamma),Rational(1,2))
+L_max = lorentz(0,gamma)
+L_HWHM = Eq(lorentz(x,gamma),(Rational(1,2)*L_max))
 display(L_HWHM)
 display(solve(L_HWHM, x))
 
@@ -36,7 +37,8 @@ G_norm = G_int.doit()
 display(Eq(G_int, G_norm))
 
 # calculating the half width at half maximum (HWHM) of a Gaussian
-G_HWHM = Eq(gauss(x,sigma),Rational(1,2))
+G_max = gauss(0, sigma)
+G_HWHM = Eq(gauss(x,sigma),Rational(1,2)*G_max)
 display(G_HWHM)
 display(solve(G_HWHM, x))
 
