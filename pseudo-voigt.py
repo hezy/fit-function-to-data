@@ -13,7 +13,7 @@ import numpy as np
 from scipy.special import wofz
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
-
+import matplotlib as mpl
 
 def lorentz(x, wL):
     # Lorentz with max=1 and w=FWHM: 
@@ -38,6 +38,7 @@ def voigt(x, wL, wG):
 
 
 def pseudo_voigt(x, w, n):
+    # pseudo-voigt with max=1 and w=FWHM:
     return n * gauss(x, w) + (1-n) * lorentz(x,w)
 
 x = np.arange (-6, 6 , 0.01)
@@ -56,7 +57,7 @@ yV = voigt(x, 1, 1)
 #popt_G, pcov_G = curve_fit(voigt, x, yG, p0=(1., 2., 1e-9), sigma=None, bounds=(0,100))
 #yVG = voigt(xfit, *popt_G)
 
-
+mpl.style.use('default')
 plt.close('all')
 fig, ax = plt.subplots(figsize=(14, 8))
 ax.grid(b=True, which='both', axis='both')
@@ -67,9 +68,7 @@ ax.set_xlabel("x", fontsize=14)
 ax.set_ylabel("y", fontsize=14)
 #ax.set_ylim()
 ax.plot(x,yL, '-r', label='Lorentz')
-#ax.plot(xfit,yVL,'-r')
 ax.plot(x,yG, '-b', label='Gauss')
-#ax.plot(xfit,yVG,'-b')
 ax.plot(x,yPV, '-m', label='Pseudo Voigt')
 ax.plot(x,yV, '-g', label='Voigt')
 ax.legend()
