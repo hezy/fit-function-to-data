@@ -13,7 +13,9 @@ import numpy as np
 from scipy.special import wofz
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
-import matplotlib as mpl
+#import matplotlib as mpl
+from matplotlib.colors import BoundaryNorm
+from matplotlib.ticker import MaxNLocator
 
 def lorentz(x, wL):
     # Lorentz with max=1 and w=FWHM: 
@@ -60,10 +62,10 @@ yV = voigt(x, *popt)
 
 
 wL, wG = np.mgrid[0.1:10.1:0.1, 0.1:10.1:0.1]
-yo = voigt(0, wL, wG)
+yo = voigt(2, wL, wG)
  
 
-mpl.style.use('default')
+#mpl.style.use('default')
 plt.close('all')
 fig1, ax = plt.subplots(figsize=(14, 8))
 ax.grid(b=True, which='both', axis='both')
@@ -79,8 +81,12 @@ ax.plot(x,yPV, '-m', label='Pseudo Voigt')
 ax.plot(x,yV, '-g', label='Voigt')
 ax.legend()
 
+levels = MaxNLocator(nbins=15).tick_values(yo.min(), yo.max())
+cmap = plt.get_cmap('PiYG')
+norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 fig2, ax2 = plt.subplots()
 
+im = ax2.pcolormesh(wL, wG, yo, cmap=cmap, norm=norm)
 plt.show()
 
 #print('Lorentzian:')
