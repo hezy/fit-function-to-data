@@ -61,7 +61,9 @@ yV = voigt(x, *popt)
 #yVG = voigt(xfit, *popt_G)
 
 
-wL, wG = np.mgrid[0.1:10.1:0.1, 0.1:10.1:0.1]
+dL = 0.05
+dG = 0.05
+wL, wG = np.mgrid[dL:10+dL:dL, dG:10+dG:dG]
 yo = voigt(2, wL, wG)
  
 
@@ -86,7 +88,9 @@ cmap = plt.get_cmap('PiYG')
 norm = BoundaryNorm(levels, ncolors=cmap.N, clip=True)
 fig2, ax2 = plt.subplots()
 
-im = ax2.pcolormesh(wL, wG, yo, cmap=cmap, norm=norm)
+cf = ax2.contourf(wL[:-1, :-1] + dL/2., wG[:-1, :-1] + dG/2., yo[:-1, :-1], levels=levels, cmap=cmap)
+fig.colorbar(cf, ax=ax2)
+
 plt.show()
 
 #print('Lorentzian:')
