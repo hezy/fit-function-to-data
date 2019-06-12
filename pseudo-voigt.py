@@ -20,7 +20,7 @@ from matplotlib.ticker import MaxNLocator
 def lorentz(x, wL):
     # Lorentz with max=1 and w=FWHM: 
     gamma = wL
-    return 1 /(1 + np.square(x/gamma)) 
+    return 1 / (1 + np.square(x/gamma)) 
     
 
 def gauss(x, wG):
