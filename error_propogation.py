@@ -15,6 +15,13 @@ g, Delta_g, t, theta_s, theta_0, theta_t, Delta_t, Delta_theta = symbols ('g, De
 
 variables = (t, theta_s, theta_0, theta_t)
 
+deltadict =	{
+        t: Delta_t,
+        theta_s: Delta_theta,
+        theta_0: Delta_theta,
+        theta_t: Delta_theta}
+
+
 def G(*variables):
     return 1/t * log( (theta_0 - theta_s) / (theta_t - theta_s) )
 
@@ -27,8 +34,8 @@ for variable in variables:
     g_derivative = Derivative(g,variable) 
     G_derivative = Derivative(G(*variables), variable)
     display(Eq(g_derivative, G_derivative.doit()))
-    g_sum_squares = g_sum_squares + g_derivative**2
-    G_sum_squares = G_sum_squares + G_derivative**2
+    g_sum_squares = g_sum_squares + (g_derivative * deltadict[variable])**2
+    G_sum_squares = G_sum_squares + (G_derivative * deltadict[variable])**2
     
 
 Delta_G = sqrt (G_sum_squares)
