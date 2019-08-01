@@ -11,18 +11,30 @@ import numpy as np
 from pandas import read_csv
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from decimal import Decimal
+
+
+def round_to_error(x, Dx):
+    '''
+    This function rounds Dx to 2 significant digits, and rounds x to the same precision, and returns a string
+    '''
+    Dx_str = str('%s' % float('%.2g' % Dx))
+    x_str = str(Decimal(str(x)).quantize(Decimal(Dx_str)))
+    return x_str + ' +/- ' + Dx_str
+
 
 # read data from csv file
-data = read_csv('sample01.csv', skiprows=1, header=None, sep=',', lineterminator='\n', names=["x","dx","y","dy"])
-x = data.iloc[:,0]
-dx = data.iloc[:,1]
-y = data.iloc[:,2]
-dy = data.iloc[:,3]
+data = read_csv('sample01.csv', skiprows=0, header=0, sep=',')
+x = data.x
+dx = data.dx
+y = data.y
+dy = data.dy
 
-
-# define a function
 def func(x, a1, a2, a3):
-    # a polynumial function
+    '''
+    a polynumial function of x
+    a1, a2, a3 are the coefficients
+    '''
     return a1 * x**2 + a2*x + a3
 
 """
@@ -36,7 +48,7 @@ dy = x+1    # y error bars increase with x
 
 # fit data with function
 popt, pcov = curve_fit(func, x, y, p0=None, sigma=dy)
-popt
+perr = np.sqrt(np.diag(pcov))
 
 # create figure
 fig, ax = plt.subplots(figsize=(14, 8))
@@ -52,9 +64,6 @@ ax.set_ylabel('displacment (mm)')
 
 plt.show()
 
-#print (popt)
-#print (pcov)
-
 # printing the fit parameters with their error estimates
 for i in range(0,3):
-    print ('a' + str(i) + '= ' + str(popt[i]) + ' +/- ' + str(pcov[i,i]))
+    print (f'a{i} = ' + round_to_error(popt[i],perr[i]) )
