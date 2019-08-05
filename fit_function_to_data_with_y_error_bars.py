@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from scipy.stats import chisquare
 from decimal import Decimal
 
 
@@ -47,7 +48,8 @@ def fit_it (func, data):
     '''
     popt, pcov = curve_fit(func, data.x, data.y, p0=None, sigma=data.dy)
     perr = np.sqrt(np.diag(pcov))
-    return [popt, perr]
+    chi, p_val = chisquare(DATA.y, func(data.x, *popt))
+    return [popt, perr, chi, p_val]
 
 
 def plot_it(data, fit_param):
@@ -86,11 +88,12 @@ def print_fit_results(fit_param):
         a = fit_param[0][i]
         Da =  fit_param[1][i]
         print (f'a{i} = ' + round_to_error(a,Da))
-        
+    print('χ^2 = ' + str(fit_param[2]))
+    print('p_value = ' + str(fit_param[3]))
         
 # read data from csv file / fabricate new data
 # data = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
-DATA = fab_data(0, 20, 1, 3)
+DATA = fab_data(0, 20, 1, 1)
 
 # fit it
 FIT_PARAM = fit_it(func,DATA)
@@ -100,3 +103,6 @@ plot_it(DATA,FIT_PARAM)
 
 # print fit results
 print_fit_results(FIT_PARAM)
+
+
+    
