@@ -33,9 +33,10 @@ def fab_data(x_min, x_max, x_step, rand_size):
     size = data.x.size
     a = 3 * np.random.randn(3)
     print('a = ' + str(a))
-    data['y'] = func(data.x, *a) + rand_size * data.x * np.random.randn(size)
+    data['dy'] = (data.x + 1) * np.random.randn(size)
+    data['y'] = func(data.x, *a) + 0.76*rand_size * data.dy
     data['dx'] = np.full((size), 0.2)
-    data['dy'] = data.x + 1    # y error bars increase with
+  # y error bars increase with
     print(data)
     return data
 
@@ -48,8 +49,8 @@ def fit_it (func, data):
     '''
     popt, pcov = curve_fit(func, data.x, data.y, p0=None, sigma=data.dy)
     perr = np.sqrt(np.diag(pcov))
-    chi, p_val = chisquare(DATA.y, f_exp=func(data.x, *popt))
-    return [popt, perr, chi, p_val]
+    chisq, p_val = chisquare(data.y, f_exp=func(data.x, *popt))
+    return popt, perr, chisq, p_val
 
 
 def plot_it(data, fit_param):
