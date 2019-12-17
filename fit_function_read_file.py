@@ -41,13 +41,6 @@ def fab_data(x_min, x_max, x_step, rand_size):
     return data
 
 
-def chi2(observed_values,expected_values):
-    test_statistic=0
-    for observed, expected in zip(observed_values, expected_values):
-        test_statistic+=(float(observed)-float(expected))**2/float(expected)
-    return test_statistic
-
-
 def fit_it (func, data):
     '''
     fit data with function
@@ -65,10 +58,9 @@ def plot_it(data, fit_param):
     input: data (Pandas DataFarme)
     output: a plot of the experimental results with the best fit 
     '''
-    fig, ax = plt.subplots(figsize=(14, 8))
-    plt.errorbar(data.x, data.y, xerr=data.dx, yerr=data.dy,
-                 fmt='none', label='experiment')
+    fig, ax = plt.subplots(figsize=(14, 8), dpi=288)
     plt.plot(data.x,func(data.x, *fit_param[0])) #, label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(fit_param[0]))
+    plt.errorbar(data.x, data.y, xerr=data.dx, yerr=data.dy)
     # arange figure
     ax.grid(True)
     ax.legend(loc='best')
@@ -104,6 +96,7 @@ def print_fit_results(fit_param):
 # read data from csv file / fabricate new data
 # data = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
 DATA = fab_data(0, 20, 1, 1)
+DATA.to_csv
 
 # fit it
 FIT_PARAM = fit_it(func,DATA)

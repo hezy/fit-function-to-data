@@ -33,18 +33,18 @@ def fab_data(x_min, x_max, x_step, rand_size):
     size = data.x.size
     a = 3 * np.random.randn(3)
     print('a = ' + str(a))
-    data['dy'] = (data.x + 1) * np.random.randn(size)
-    data['y'] = func(data.x, *a) + 0.76*rand_size * data.dy
+    data['dy'] = 0.05 * func(data.x, *a) * np.random.randn(size)
+    data['y'] = func(data.x, *a) + rand_size * data.dy * np.random.randn(size)
     data['dx'] = np.full((size), 0.2)
   # y error bars increase with
     print(data)
     return data
 
 
-def chi2(observed_values,expected_values):
+def chi2(observed_values, observed_errors, expected_values):
     test_statistic=0
-    for observed, expected in zip(observed_values, expected_values):
-        test_statistic+=(float(observed)-float(expected))**2/float(expected)
+    for observed, errors, expected in zip(observed_values, observed_errors, expected_values):
+        test_statistic+=(float(observed)-float(expected)/float(errors))**2
     return test_statistic
 
 
@@ -56,7 +56,8 @@ def fit_it (func, data):
     '''
     popt, pcov = curve_fit(func, data.x, data.y, p0=None, sigma=data.dy)
     perr = np.sqrt(np.diag(pcov))
-    chisq, p_val = chisquare(data.y, f_exp=func(data.x, *popt))
+    chisq = chi2(data.y, data.dy, func(data.x, *popt))
+    p_val = 1
     return popt, perr, chisq, p_val
 
 

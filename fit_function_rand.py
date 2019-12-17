@@ -41,13 +41,6 @@ def fab_data(x_min, x_max, x_step, rand_size):
     return data
 
 
-def chi2(observed_values,expected_values):
-    test_statistic=0
-    for observed, expected in zip(observed_values, expected_values):
-        test_statistic+=(float(observed)-float(expected))**2/float(expected)
-    return test_statistic
-
-
 def fit_it (func, data):
     '''
     fit data with function
