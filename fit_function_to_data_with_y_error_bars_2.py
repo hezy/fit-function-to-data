@@ -32,7 +32,7 @@ def fab_data(x_min, x_max, x_step, rand_size):
     size = data.x.size
     a = 3 * np.random.randn(3)
     print('a = ' + str(a))
-    data['dy'] = 0.05 * func(data.x, *a) * np.random.randn(size)
+    data['dy'] = np.abs(0.05 * func(data.x, *a) * np.random.randn(size))
     data['y'] = func(data.x, *a) + rand_size * data.dy * np.random.randn(size )
     data['dx'] = np.full((size), 0.2)
   # y error bars increase with
@@ -84,7 +84,7 @@ def round_to_error(x, Dx):
     '''
     Dx_str = str('%s' % float('%.2g' % Dx))
     x_str = str(Decimal(str(x)).quantize(Decimal(Dx_str)))
-    return x_str + ' +/- ' + Dx_str
+    return x_str + ' ± ' + Dx_str
 
 
 def print_fit_results(data, fit_param):
