@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from scipy.stats import chisqprob
 from decimal import Decimal
 
 
@@ -33,9 +34,8 @@ def fab_data(x_min, x_max, x_step, rand_size):
     a = 3 * np.random.randn(3)
     print('a = ' + str(a))
     data['dy'] = np.abs(0.05 * func(data.x, *a) * np.random.randn(size))
-    data['y'] = func(data.x, *a) + rand_size * data.dy * np.random.randn(size )
-    data['dx'] = np.full((size), 0.2)
-  # y error bars increase with
+    data['y'] = func(data.x, *a) + rand_size * data.dy * np.random.randn(size)
+    data['dx'] = np.full(size, x_step/10)
     return data
 
 
@@ -55,7 +55,7 @@ def fit_it (func, data):
     popt, pcov = curve_fit(func, data.x, data.y, p0=None, sigma=data.dy)
     perr = np.sqrt(np.diag(pcov))
     chisq = chi2(data.y, data.dy, func(data.x, *popt)) 
-    p_val = 'null'
+    p_val = chisqprob(chisq, 1)
     return popt, perr, chisq, p_val
 
 
@@ -106,7 +106,7 @@ def print_fit_results(data, fit_param):
         
 # read data from csv file / fabricate new data
 # data = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
-DATA = fab_data(0, 20, 1, 1)
+DATA = fab_data(0, 14, 1, 1)
 
 # fit it
 FIT_PARAM = fit_it(func,DATA)
