@@ -57,7 +57,7 @@ def fit_it (func, data):
     perr = np.sqrt(np.diag(pcov))
     chisq = chi_2(data.y, data.dy, func(data.x, *popt))
     degrees_freedom = data.y.size - popt.size
-    p_val = chi2.pdf(chisq, degrees_freedom)
+    p_val = chi2.cdf(chisq, degrees_freedom)
     return popt, perr, chisq, p_val
 
 
@@ -103,7 +103,7 @@ def print_fit_results(data, fit_param):
     degrees_freedom = DATA.y.size - fit_param[0].size 
     print('χ^2 = ' + round_to_error(fit_param[2], np.sqrt(2*degrees_freedom)))
     print('χ^2_red = ' + round_to_error(fit_param[2]/degrees_freedom, np.sqrt(2/degrees_freedom)))
-    print('p-value = ' + str(fit_param[3]))
+    print('p-value = ' + str(100*fit_param[3]) + '%') 
 
         
 # read data from csv file / fabricate new data
