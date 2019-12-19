@@ -11,7 +11,6 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-from scipy.stats import chisqprob
 from decimal import Decimal
 
 
@@ -55,7 +54,7 @@ def fit_it (func, data):
     popt, pcov = curve_fit(func, data.x, data.y, p0=None, sigma=data.dy)
     perr = np.sqrt(np.diag(pcov))
     chisq = chi2(data.y, data.dy, func(data.x, *popt)) 
-    p_val = chisqprob(chisq, 1)
+    p_val = 'null'
     return popt, perr, chisq, p_val
 
 
