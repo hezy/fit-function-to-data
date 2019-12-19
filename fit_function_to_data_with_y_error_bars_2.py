@@ -57,7 +57,7 @@ def fit_it (func, data):
     perr = np.sqrt(np.diag(pcov))
     chisq = chi_2(data.y, data.dy, func(data.x, *popt))
     degrees_freedom = data.y.size - popt.size
-    p_val = chi2(degrees_freedom, chisq)
+    p_val = chi2.pdf(chisq, degrees_freedom)
     return popt, perr, chisq, p_val
 
 
