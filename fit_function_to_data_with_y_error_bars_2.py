@@ -3,7 +3,8 @@
 Created on Sat Mar 9, 2019
 @author: Hezy Amiel
 fit_function_to_data_with_y_error_bars.py
-this script fits a defined function to a given data with y error bars25164/24
+this script optimizes the free parametrs of a pre-defined function
+to a given y vs x data with y error bars
 """
 
 
@@ -36,7 +37,6 @@ def fab_data(x_min, x_max, x_step, rand_size):
     data['dy'] = 0.05 * func(data.x, *a) * np.random.randn(size)
     data['y'] = func(data.x, *a) + rand_size * data.dy * np.random.randn(size )
     data['dx'] = np.full((size), 0.2)
-  # y error bars increase with
     return data
 
 
