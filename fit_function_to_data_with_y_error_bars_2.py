@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-import scipy.stats
+from scipy.stats import chi2
 from decimal import Decimal
 
 
@@ -55,8 +55,9 @@ def fit_it (func, data):
     '''
     popt, pcov = curve_fit(func, data.x, data.y, p0=None, sigma=data.dy)
     perr = np.sqrt(np.diag(pcov))
-    chisq = chi_2(data.y, data.dy, func(data.x, *popt)) 
-    p_val = 'null'
+    chisq = chi_2(data.y, data.dy, func(data.x, *popt))
+    degrees_freedom = data.y.size - popt.size
+    p_val = chi2(degrees_freedom, chisq)
     return popt, perr, chisq, p_val
 
 
@@ -99,9 +100,9 @@ def print_fit_results(data, fit_param):
         a = fit_param[0][i]
         Da =  fit_param[1][i]
         print (f'a{i} = ' + round_to_error(a, Da))
-    n = DATA.y.size - fit_param[0].size 
-    print('χ^2 = ' + round_to_error(fit_param[2], np.sqrt(2*n)))
-    print('χ^2_red = ' + round_to_error(fit_param[2]/n, np.sqrt(2/n)))
+    degrees_freedom = DATA.y.size - fit_param[0].size 
+    print('χ^2 = ' + round_to_error(fit_param[2], np.sqrt(2*degrees_freedom)))
+    print('χ^2_red = ' + round_to_error(fit_param[2]/degrees_freedom, np.sqrt(2/degrees_freedom)))
     print('p-value = ' + str(fit_param[3]))
 
         
