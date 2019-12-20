@@ -34,7 +34,7 @@ def fab_data(x_min, x_max, x_step, rand_size):
     size = data.x.size
     a = 3 * np.random.randn(3)
     print('a = ' + str(a))
-    data['dy'] = 0.05 * func(data.x, *a) * np.random.randn(size)
+    data['dy'] = np.abs(0.05 * func(data.x, *a) * np.random.randn(size))
     data['y'] = func(data.x, *a) + rand_size * data.dy * np.random.randn(size )
     data['dx'] = np.full((size), 0.2)
     return data
@@ -57,7 +57,7 @@ def fit_it (func, data):
     perr = np.sqrt(np.diag(pcov))
     chisq = chi_2(data.y, data.dy, func(data.x, *popt))
     degrees_freedom = data.y.size - popt.size
-    p_val = chi2.cdf(chisq, degrees_freedom)
+    p_val = chi2.sf(chisq, degrees_freedom)
     return popt, perr, chisq, p_val
 
 
@@ -86,7 +86,7 @@ def round_to_error(x, Dx):
     '''
     Dx_str = str('%s' % float('%.2g' % Dx))
     x_str = str(Decimal(str(x)).quantize(Decimal(Dx_str)))
-    return x_str + ' +/- ' + Dx_str
+    return x_str + ' ± ' + Dx_str
 
 
 def print_fit_results(data, fit_param):
@@ -108,7 +108,7 @@ def print_fit_results(data, fit_param):
         
 # read data from csv file / fabricate new data
 # data = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
-DATA = fab_data(0, 20, 1, 1)
+DATA = fab_data(0, 30, 1, 1.1)
 
 # fit it
 FIT_PARAM = fit_it(func,DATA)
