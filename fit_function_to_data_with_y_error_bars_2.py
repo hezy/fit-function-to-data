@@ -32,11 +32,11 @@ def fab_data(x_min, x_max, x_step, rand_size):
     data = pd.DataFrame()
     data['x'] = np.arange(x_min, x_max, x_step)
     size = data.x.size
+    data['dx'] = np.full((size), 0.2)
     a = 3 * np.random.randn(3)
     print('a = ' + str(a))
     data['dy'] = np.abs(0.05 * func(data.x, *a) * np.random.randn(size))
     data['y'] = func(data.x, *a) + rand_size * data.dy * np.random.randn(size )
-    data['dx'] = np.full((size), 0.2)
     return data
 
 
