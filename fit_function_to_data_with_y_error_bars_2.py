@@ -106,6 +106,13 @@ def print_fit_results(data, fit_param):
     print('χ^2_red = ' + round_to_error(fit_param[4], np.sqrt(2/fit_param[3])))
     print('p-value = ' + str(fit_param[5])) 
 
+    
+def calc_residuals(func, data, fit_param):
+    residuals = pd.DataFrame()
+    residuals = data
+    residuals.y = data.y - func(data.x, *fit_param)
+    return residuals
+
         
 ''' read data from csv file / fabricate new data '''
 DATA = pd.read_csv('sample02.csv', skiprows=0, header=0, sep=',')
@@ -118,8 +125,9 @@ FIT_PARAM = fit_it(func,DATA)
 TITLES = 'Displacment vs Time', 'Time (ms)', 'Displacement (mm)' 
 plot_it(DATA, FIT_PARAM, TITLES)
 
+TITLES = 'Displacment residuals vs Time', 'Time (ms)', 'y - y_{fit} (mm)'
+plot_it(calc_residuals(func, DATA, FIT_PARAM[0]), FIT_PARAM[0], TITLES) 
+
 # print fit results
 print_fit_results(DATA, FIT_PARAM)
 
-
-    
