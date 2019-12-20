@@ -108,7 +108,7 @@ def print_fit_results(data, fit_param):
 
         
 ''' read data from csv file / fabricate new data '''
-DATA = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
+DATA = pd.read_csv('sample02.csv', skiprows=0, header=0, sep=',')
 # DATA = fab_data(0, 30, 1, 1)
 
 # fit it
