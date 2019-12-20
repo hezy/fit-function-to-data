@@ -37,7 +37,6 @@ def fab_data(x_min, x_max, x_step, rand_size):
     print('a = ' + str(a))
     data['dy'] = np.abs(0.05 * func(data.x, *a) * np.random.randn(size))
     data['y'] = func(data.x, *a) + rand_size * data.dy * np.random.randn(size )
-
     return data
 
 
@@ -56,10 +55,11 @@ def fit_it (func, data):
     '''
     popt, pcov = curve_fit(func, data.x, data.y, p0=None, sigma=data.dy)
     perr = np.sqrt(np.diag(pcov))
-    chisq = chi_2(data.y, data.dy, func(data.x, *popt))
+    chi_square = chi_2(data.y, data.dy, func(data.x, *popt))
     degrees_freedom = data.y.size - popt.size
-    p_val = chi2.sf(chisq, degrees_freedom)
-    return popt, perr, chisq, p_val
+    chi_square_red = chi_square/degrees_freedom
+    p_value = chi2.sf(chi_square, degrees_freedom)
+    return popt, perr, chi_square, degrees_freedom, chi_square_red, p_value
 
 
 def plot_it(data, fit_param):
@@ -100,17 +100,16 @@ def print_fit_results(data, fit_param):
     for i in range(0,3):
         a = fit_param[0][i]
         Da =  fit_param[1][i]
-        print (f'a{i} = ' + round_to_error(a, Da))
-    degrees_freedom = DATA.y.size - fit_param[0].size 
-    print('χ^2 = ' + round_to_error(fit_param[2], np.sqrt(2*degrees_freedom)))
-    print('degrees of freedom = ' + str(degrees_freedom))
-    print('χ^2_red = ' + round_to_error(fit_param[2]/degrees_freedom, np.sqrt(2/degrees_freedom)))
-    print('p-value = ' + str(fit_param[3])) 
+        print (f'a{i} = ' + round_to_error(a, Da)) 
+    print('χ^2 = ' + round_to_error(fit_param[2], np.sqrt(2*fit_param[3])))
+    print('degrees of freedom = ' + str(fit_param[3]))
+    print('χ^2_red = ' + round_to_error(fit_param[4], np.sqrt(2/fit_param[3])))
+    print('p-value = ' + str(fit_param[5])) 
 
         
 # read data from csv file / fabricate new data
-# data = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
-DATA = fab_data(0, 30, 1, 1.1)
+DATA = pd.read_csv('sample02.csv', skiprows=0, header=1, sep=' ')
+# DATA = fab_data(0, 30, 1, 1)
 
 # fit it
 FIT_PARAM = fit_it(func,DATA)
