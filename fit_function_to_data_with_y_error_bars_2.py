@@ -37,6 +37,7 @@ def fab_data(x_min, x_max, x_step, rand_size):
     print('a = ' + str(a))
     data['dy'] = np.abs(0.05 * func(data.x, *a) * np.random.randn(size))
     data['y'] = func(data.x, *a) + rand_size * data.dy * np.random.randn(size )
+
     return data
 
 
@@ -102,8 +103,9 @@ def print_fit_results(data, fit_param):
         print (f'a{i} = ' + round_to_error(a, Da))
     degrees_freedom = DATA.y.size - fit_param[0].size 
     print('χ^2 = ' + round_to_error(fit_param[2], np.sqrt(2*degrees_freedom)))
+    print('degrees of freedom = ' + str(degrees_freedom))
     print('χ^2_red = ' + round_to_error(fit_param[2]/degrees_freedom, np.sqrt(2/degrees_freedom)))
-    print('p-value = ' + str(100*fit_param[3]) + '%') 
+    print('p-value = ' + str(fit_param[3])) 
 
         
 # read data from csv file / fabricate new data
