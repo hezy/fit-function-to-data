@@ -16,12 +16,12 @@ from scipy.stats import chi2
 from decimal import Decimal
 
 
-def func(x, a1, a2, a3):
+def func(x, a0, a1, a2):
     '''
     a polynumial function of x
-    a1, a2, a3 are the coefficients
+    a0, a1, a2 are the coefficients
     '''
-    return a1 * x**2 + a2*x + a3
+    return a0 + a1*x + a2 * x**2
 
 
 def fab_data(x_min, x_max, x_step, rand_size):
