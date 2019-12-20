@@ -62,7 +62,7 @@ def fit_it (func, data):
     return popt, perr, chi_square, degrees_freedom, chi_square_red, p_value
 
 
-def plot_it(data, fit_param):
+def plot_it(data, fit_param, titles):
     '''
     input: data (Pandas DataFarme)
     output: a plot of the experimental results with the best fit 
@@ -74,9 +74,9 @@ def plot_it(data, fit_param):
     # arange figure
     ax.grid(True)
     ax.legend(loc='best')
-    ax.set_title('displacement vs time')
-    ax.set_xlabel('time (ms)')
-    ax.set_ylabel('displacment (mm)')
+    ax.set_title(titles[0])
+    ax.set_xlabel(titles[1])
+    ax.set_ylabel(titles[2])
     return plt.show()
 
 
@@ -107,15 +107,16 @@ def print_fit_results(data, fit_param):
     print('p-value = ' + str(fit_param[5])) 
 
         
-# read data from csv file / fabricate new data
-DATA = pd.read_csv('sample02.csv', skiprows=0, header=1, sep=' ')
+''' read data from csv file / fabricate new data '''
+DATA = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
 # DATA = fab_data(0, 30, 1, 1)
 
 # fit it
 FIT_PARAM = fit_it(func,DATA)
 
 # plot it
-plot_it(DATA,FIT_PARAM)
+TITLES = 'Displacment vs Time', 'Time (ms)', 'Displacement (mm)' 
+plot_it(DATA, FIT_PARAM, TITLES)
 
 # print fit results
 print_fit_results(DATA, FIT_PARAM)
