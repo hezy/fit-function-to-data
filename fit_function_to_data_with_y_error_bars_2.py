@@ -106,6 +106,13 @@ def print_fit_results(data, fit_param):
     print('χ^2_red = ' + round_to_error(fit_param[4], np.sqrt(2/fit_param[3])))
     print('p-value = ' + str(fit_param[5])) 
 
+    
+def calc_residuals(func, data, fit_param):
+    residuals = pd.DataFrame()
+    residuals = data
+    residuals.y = data.y - func(data.x, *fit_param)
+    return residuals
+
         
 ''' read data from csv file / fabricate new data '''
 DATA = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
