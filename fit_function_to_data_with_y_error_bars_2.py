@@ -115,7 +115,7 @@ def calc_residuals(func, data, fit_param):
 
         
 ''' read data from csv file / fabricate new data '''
-DATA = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
+DATA = pd.read_csv('sample02.csv', skiprows=0, header=0, sep=',')
 # DATA = fab_data(0, 30, 1, 1)
 
 # fit it
@@ -125,8 +125,9 @@ FIT_PARAM = fit_it(func,DATA)
 TITLES = 'Displacment vs Time', 'Time (ms)', 'Displacement (mm)' 
 plot_it(DATA, FIT_PARAM, TITLES)
 
+TITLES = 'Displacment residuals vs Time', 'Time (ms)', 'y - y_{fit} (mm)'
+plot_it(calc_residuals(func, DATA, FIT_PARAM[0]), FIT_PARAM[0], TITLES) 
+
 # print fit results
 print_fit_results(DATA, FIT_PARAM)
 
-
-    
