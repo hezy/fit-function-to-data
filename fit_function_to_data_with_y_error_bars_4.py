@@ -23,6 +23,9 @@ def func(x, a0, a1, a2):
     '''
     return a0 + a1*x + a2 * x**2
 
+def func_0(x, a0, a1, a2):
+    return 0
+
 
 def fab_data(x_min, x_max, x_step, rand_size):
     '''
@@ -101,12 +104,13 @@ def print_fit_results(data, fit_param):
 
     
 def calc_residuals(func, data, fit_param):
-    residuals = pd.DataFrame()
-    residuals = data
+    residuals = data.copy()
     residuals.y = data.y - func(data.x, *fit_param)
     return residuals
-
-        
+    
+    
+# START HERE
+    
 ''' read data from csv file / fabricate new data '''
 DATA = pd.read_csv('sample02.csv') #, skiprows=0, header=0, sep=',')
 # DATA = fab_data(0, 30, 1, 1)
@@ -124,4 +128,5 @@ plot_it(RESIDUALS, FIT_PARAM, TITLES)
 
 # print fit results
 print_fit_results(DATA, FIT_PARAM)
+print_fit_results(RESIDUALS, FIT_PARAM)
 
