@@ -40,13 +40,6 @@ def fab_data(x_min, x_max, x_step, rand_size):
     return data
 
 
-def chi_2(observed_values, observed_errors, expected_values):
-    test_statistic = 0
-    for observed, errors, expected in zip(observed_values, observed_errors, expected_values):
-        test_statistic += ((float(observed) - float(expected)) / float(errors))**2
-    return test_statistic
-
-
 def fit_it (func, data):
     '''
     fit data with function
@@ -55,7 +48,7 @@ def fit_it (func, data):
     '''
     popt, pcov = curve_fit(func, data.x, data.y, p0=None, sigma=data.dy)
     perr = np.sqrt(np.diag(pcov))
-    chi_square = chi_2(data.y, data.dy, func(data.x, *popt))
+    chi_square = np.sum(((data.y - func(data.x, *popt))/data.dy)**2)
     degrees_freedom = data.y.size - popt.size
     chi_square_red = chi_square/degrees_freedom
     p_value = chi2.sf(chi_square, degrees_freedom)
@@ -119,14 +112,15 @@ DATA = pd.read_csv('sample02.csv', skiprows=0, header=0, sep=',')
 # DATA = fab_data(0, 30, 1, 1)
 
 # fit it
-FIT_PARAM = fit_it(func,DATA)
+FIT_PARAM = fit_it(func, DATA)
 
 # plot it
 TITLES = 'Displacment vs Time', 'Time (ms)', 'Displacement (mm)' 
 plot_it(DATA, FIT_PARAM, TITLES)
 
 TITLES = 'Displacment residuals vs Time', 'Time (ms)', 'y - y_{fit} (mm)'
-plot_it(calc_residuals(func, DATA, FIT_PARAM[0]), FIT_PARAM[0], TITLES) 
+RESIDUALS = calc_residuals(func, DATA, FIT_PARAM[0])
+plot_it(RESIDUALS, FIT_PARAM, TITLES) 
 
 # print fit results
 print_fit_results(DATA, FIT_PARAM)
