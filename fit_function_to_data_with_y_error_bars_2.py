@@ -70,8 +70,7 @@ def plot_it(data, fit_param, titles):
     fig, ax = plt.subplots(figsize=(14, 8))
     plt.errorbar(data.x, data.y, xerr=data.dx, yerr=data.dy,
                  fmt='none', label='experiment')
-    plt.plot(data.x,func(data.x, *fit_param[0])) #, label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(fit_param[0]))
-    # arange figure
+    plt.plot(data.x,func(data.x, *fit_param[0]))
     ax.grid(True)
     ax.legend(loc='best')
     ax.set_title(titles[0])
