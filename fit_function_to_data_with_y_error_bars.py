@@ -3,7 +3,8 @@
 Created on Sat Mar 9, 2019
 @author: Hezy Amiel
 fit_function_to_data_with_y_error_bars.py
-this script fits a defined function to a given data with y error bars
+this script optimizes the free parametrs of a pre-defined function
+to a given y vs x data with y error bars
 """
 
 
@@ -11,16 +12,19 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
-from scipy.stats import chisquare
+from scipy.stats import chi2
 from decimal import Decimal
 
 
-def func(x, a1, a2, a3):
+def poly2(x, a0, a1, a2):
     '''
     a polynumial function of x
-    a1, a2, a3 are the coefficients
+    a0, a1, a2 are the coefficients
     '''
-    return a1 * x**2 + a2*x + a3
+    return a0 + a1*x + a2 * x**2
+
+def func_0(x, a0, a1, a2):
+    return 0*x
 
 
 def fab_data(x_min, x_max, x_step, rand_size):
@@ -31,21 +35,12 @@ def fab_data(x_min, x_max, x_step, rand_size):
     data = pd.DataFrame()
     data['x'] = np.arange(x_min, x_max, x_step)
     size = data.x.size
+    data['dx'] = np.full((size), 0.2)
     a = 3 * np.random.randn(3)
     print('a = ' + str(a))
-    data['dy'] = (data.x + 1) * np.random.randn(size)
-    data['y'] = func(data.x, *a) + 0.76*rand_size * data.dy
-    data['dx'] = np.full((size), 0.2)
-  # y error bars increase with
-    print(data)
+    data['dy'] = np.abs(0.05 * func(data.x, *a) * np.random.randn(size))
+    data['y'] = func(data.x, *a) + rand_size * data.dy * np.random.randn(size )
     return data
-
-
-def chi2(observed_values,expected_values):
-    test_statistic=0
-    for observed, expected in zip(observed_values, expected_values):
-        test_statistic+=(float(observed)-float(expected))**2/float(expected)
-    return test_statistic
 
 
 def fit_it (func, data):
@@ -56,11 +51,14 @@ def fit_it (func, data):
     '''
     popt, pcov = curve_fit(func, data.x, data.y, p0=None, sigma=data.dy)
     perr = np.sqrt(np.diag(pcov))
-    chisq, p_val = chisquare(data.y, f_exp=func(data.x, *popt))
-    return popt, perr, chisq, p_val
+    chi_square = np.sum(((data.y - func(data.x, *popt))/data.dy)**2)
+    degrees_freedom = data.y.size - popt.size
+    chi_square_red = chi_square/degrees_freedom
+    p_value = chi2.sf(chi_square, degrees_freedom)
+    return popt, perr, chi_square, degrees_freedom, chi_square_red, p_value
 
 
-def plot_it(data, fit_param):
+def plot_it(data, func, fit_param, titles):
     '''
     input: data (Pandas DataFarme)
     output: a plot of the experimental results with the best fit 
@@ -72,9 +70,9 @@ def plot_it(data, fit_param):
     # arange figure
     ax.grid(True)
     ax.legend(loc='best')
-    ax.set_title('displacement vs time')
-    ax.set_xlabel('time (ms)')
-    ax.set_ylabel('displacment (mm)')
+    ax.set_title(titles[0])
+    ax.set_xlabel(titles[1])
+    ax.set_ylabel(titles[2])
     return plt.show()
 
 
@@ -85,34 +83,49 @@ def round_to_error(x, Dx):
     '''
     Dx_str = str('%s' % float('%.2g' % Dx))
     x_str = str(Decimal(str(x)).quantize(Decimal(Dx_str)))
-    return x_str + ' +/- ' + Dx_str
+    return x_str + ' ± ' + Dx_str
 
 
-def print_fit_results(fit_param):
+def print_fit_results(data, fit_param):
     '''
     printing the fit parameters with their error estimates
     input: fit_param = [optimal parameters of fit, parameter estimated errors]
     returns:
     '''
+    print(data)
     for i in range(0,3):
         a = fit_param[0][i]
         Da =  fit_param[1][i]
-        print (f'a{i} = ' + round_to_error(a,Da))
-    print('χ^2 = ' + str(fit_param[2]))
-    print('p-value = ' + str(fit_param[3]))
-        
-# read data from csv file / fabricate new data
-# data = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
-DATA = fab_data(0, 20, 1, 1)
-
-# fit it
-FIT_PARAM = fit_it(func,DATA)
-
-# plot it
-plot_it(DATA,FIT_PARAM)
-
-# print fit results
-print_fit_results(FIT_PARAM)
-
+        print (f'a{i} = ' + round_to_error(a, Da)) 
+    print('χ^2 = ' + round_to_error(fit_param[2], np.sqrt(2*fit_param[3])))
+    print('degrees of freedom = ' + str(fit_param[3]))
+    print('χ^2_red = ' + round_to_error(fit_param[4], np.sqrt(2/fit_param[3])))
+    print('p-value = ' + str(fit_param[5])) 
 
     
+def calc_residuals(func, data, fit_param):
+    residuals = data.copy()
+    residuals.y = data.y - func(data.x, *fit_param)
+    return residuals
+    
+    
+# START HERE
+    
+''' read data from csv file / fabricate new data '''
+DATA = pd.read_csv('sample02.csv') #, skiprows=0, header=0, sep=',')
+# DATA = fab_data(0, 30, 1, 1)
+
+# fit it
+FIT_PARAM = fit_it(poly2, DATA)
+
+# plot it
+TITLES1 = 'Displacment vs Time', 'Time (ms)', 'Displacement (mm)' 
+plot_it(DATA, poly2, FIT_PARAM, TITLES1)
+
+TITLES2 = 'Displacment residuals vs Time', 'Time (ms)', 'y_{obs} - y_{fit} (mm)'
+RESIDUALS = calc_residuals(poly2, DATA, FIT_PARAM[0])
+plot_it(RESIDUALS, func_0, FIT_PARAM, TITLES2) 
+
+# print fit results
+print_fit_results(DATA, FIT_PARAM)
+
