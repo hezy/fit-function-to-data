@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+uau# -*- coding: utf-8 -*-
 """
 Created on Sat Mar 9, 2019
 @author: Hezy Amiel
@@ -108,3 +108,4 @@ plot_it(DATA, FIT_PARAM)
 
 # print fit results
 print_fit_results(FIT_PARAM)
+c
