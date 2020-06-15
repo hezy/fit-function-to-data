@@ -1,5 +1,0 @@
-requirements = """
-numpy==1.18.1
-scipy==
-matplotlib==
-"""
