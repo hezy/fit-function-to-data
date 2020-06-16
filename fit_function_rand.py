@@ -62,7 +62,11 @@ def plot_it(data, fit_param):
     plt.errorbar(data.x, data.y, xerr=data.dx, yerr=data.dy,
                  fmt='none', label='experiment')
     plt.plot(data.x, func(data.x, *fit_param[0]),
-             label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(fit_param[0]))
+             label='fit')
+    props = dict(boxstyle='round', facecolor='ivory', alpha=0.3)
+    text_box = text_fit_results(fit_param)
+    ax.text(0.05, 0.85, text_box, transform=ax.transAxes, fontsize=10,
+            verticalalignment='top', bbox=props)
     # arange figure
     ax.grid(True)
     ax.legend(loc='best')
@@ -82,13 +86,14 @@ def round_to_error(x, Dx):
     return x_str + ' +/- ' + Dx_str
 
 
-def print_fit_results(fit_param):
+def text_fit_results(fit_param):
     '''
-    printing the fit parameters with their error estimates
+    creating a text string with the fit parameters with their error estimates
+    and relevant statistical tests for goodnes of fit.
     input: fit_param = [optimal parameters of fit, parameter estimated errors]
-    returns:
+    returns: a text with the fit results
     '''
-    textstr = ['w', 'w', 'w', 'w', 'w']
+    textstr = ['?', '?', '?', '?', '?']
     for i in range(0, 3):
         a = fit_param[0][i]
         Da = fit_param[1][i]
@@ -96,8 +101,9 @@ def print_fit_results(fit_param):
     textstr[3] = 'χ^2 = ' + str(fit_param[2])
     textstr[4] = 'p-value = ' + str(fit_param[3])
     text = '\n'.join(textstr)
-    print(text)
-    
+    return text
+
+
 # read data from csv file / fabricate new data
 # data = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
 DATA = fab_data(0, 20, 1, 1)
@@ -109,4 +115,4 @@ FIT_PARAM = fit_it(func, DATA)
 plot_it(DATA, FIT_PARAM)
 
 # print fit results
-print_fit_results(FIT_PARAM)
+print(text_fit_results(FIT_PARAM))
