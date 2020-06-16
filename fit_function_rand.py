@@ -27,7 +27,7 @@ def fab_data(x_min, x_max, x_step, rand_size):
     '''
     fabricate data with function + random noise
     use in case there's no csv file ready
-    ''' 
+    '''
     data = pd.DataFrame()
     data['x'] = np.arange(x_min, x_max, x_step)
     size = data.x.size
@@ -37,16 +37,15 @@ def fab_data(x_min, x_max, x_step, rand_size):
     data['y'] = func(data.x, *a) + 0.76*rand_size * data.dy
     data['dx'] = np.full((size), 0.2)
     props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-    
     print(data)
     return data
 
 
-def fit_it (func, data):
+def fit_it(func, data):
     '''
     fit data with function
     input: func, data
-    returns a tuple: [optimal parameters, estimated parameters errors]    
+    returns a tuple: [optimal parameters, estimated parameters errors]
     '''
     popt, pcov = curve_fit(func, data.x, data.y, p0=None, sigma=data.dy)
     perr = np.sqrt(np.diag(pcov))
@@ -62,7 +61,8 @@ def plot_it(data, fit_param):
     fig, ax = plt.subplots(figsize=(14, 8))
     plt.errorbar(data.x, data.y, xerr=data.dx, yerr=data.dy,
                  fmt='none', label='experiment')
-    plt.plot(data.x,func(data.x, *fit_param[0])) #, label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(fit_param[0]))
+    plt.plot(data.x, func(data.x, *fit_param[0]),
+             label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(fit_param[0]))
     # arange figure
     ax.grid(True)
     ax.legend(loc='best')
@@ -88,25 +88,25 @@ def print_fit_results(fit_param):
     input: fit_param = [optimal parameters of fit, parameter estimated errors]
     returns:
     '''
-    for i in range(0,3):
+    textstr = ['w', 'w', 'w', 'w', 'w']
+    for i in range(0, 3):
         a = fit_param[0][i]
-        Da =  fit_param[1][i]
-        print (f'a{i} = ' + round_to_error(a,Da))
-    print('χ^2 = ' + str(fit_param[2]))
-    print('p-value = ' + str(fit_param[3]))
-        
+        Da = fit_param[1][i]
+        textstr[i] = f'a{i} = ' + round_to_error(a, Da)
+    textstr[3] = 'χ^2 = ' + str(fit_param[2])
+    textstr[4] = 'p-value = ' + str(fit_param[3])
+    text = '\n'.join(textstr)
+    print(text)
+    
 # read data from csv file / fabricate new data
 # data = pd.read_csv('sample01.csv', skiprows=0, header=0, sep=',')
 DATA = fab_data(0, 20, 1, 1)
 
 # fit it
-FIT_PARAM = fit_it(func,DATA)
+FIT_PARAM = fit_it(func, DATA)
 
 # plot it
-plot_it(DATA,FIT_PARAM)
+plot_it(DATA, FIT_PARAM)
 
 # print fit results
 print_fit_results(FIT_PARAM)
-
-
-    
