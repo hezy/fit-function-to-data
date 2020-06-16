@@ -36,7 +36,8 @@ def fab_data(x_min, x_max, x_step, rand_size):
     data['dy'] = (data.x + 1) * np.random.randn(size)
     data['y'] = func(data.x, *a) + 0.76*rand_size * data.dy
     data['dx'] = np.full((size), 0.2)
-  # y error bars increase with
+    props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+    
     print(data)
     return data
 
