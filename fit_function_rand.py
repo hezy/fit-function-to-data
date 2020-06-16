@@ -149,7 +149,7 @@ FIT_PARAM = fit_it(poly_2, DATA)
 TITLES = 'Displacment vs Time', 'Time (ms)', 'Displacement (mm)'
 plot_it(DATA, poly_2, FIT_PARAM, TITLES)
 
-TITLES = 'Displacment residuals vs Time', 'Time (ms)', 'y - y_{fit} (mm)'
+TITLES = 'Displacment residuals vs Time', 'Time (ms)', 'y_{obs} - y_{fit} (mm)'
 plot_it(calc_residuals(poly_2, DATA, FIT_PARAM[0]), zero_func, FIT_PARAM, TITLES)
 
 # print fit results
