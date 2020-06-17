@@ -12,7 +12,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from scipy import stats
 from scipy.optimize import curve_fit
-from scipy.stats import chisquare
+#from scipy.stats import chisquare
 from decimal import Decimal
 
 
@@ -26,8 +26,8 @@ def poly_2(x, a0, a1, a2):
 
 def zero_func(x, a0, a1, a2):
     return poly_2(x, a0, a1, a2) - poly_2(x, a0, a1, a2)
-    
-    
+
+
 
 def noise(signal, sigma_background, sigma_measurment):
     '''
@@ -82,7 +82,6 @@ def calc_residuals(func, data, fit_param):
     residuals = data
     residuals.y = data.y - func(data.x, *fit_param)
     return residuals
-
 
 
 def plot_it(data, func, fit_param, titles):
