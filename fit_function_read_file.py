@@ -1,4 +1,4 @@
-uau# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Created on Sat Mar 9, 2019
 @author: Hezy Amiel
@@ -7,12 +7,12 @@ this script fits a defined function to a given data with y error bars
 """
 
 
+from decimal import Decimal
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from scipy.stats import chisquare
-from decimal import Decimal
 
 
 def func(x, a1, a2, a3):
@@ -36,7 +36,7 @@ def fab_data(x_min, x_max, x_step, rand_size):
     data['dy'] = (data.x + 1) * np.random.randn(size)
     data['y'] = func(data.x, *a) + 0.76*rand_size * data.dy
     data['dx'] = np.full((size), 0.2)
-    #y error bars increase with
+    # y error bars increase with
     print(data)
     return data
 
@@ -60,7 +60,7 @@ def plot_it(data, fit_param):
     '''
     fig, ax = plt.subplots(figsize=(14, 8), dpi=288)
     plt.plot(data.x, func(data.x, *fit_param[0]))
-    #, label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(fit_param[0]))
+    # , label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(fit_param[0]))
     plt.errorbar(data.x, data.y, xerr=data.dx, yerr=data.dy)
     # arange figure
     ax.grid(True)
