@@ -1,0 +1,15 @@
+[Header]
+TITLE, AuAgTe_4;SUBTITLE, Resistance above Tc vs. Pressure;LEGEND, PPMS
+
+
+
+[Data]
+ID,P(GPa),DP(GPa),R(Ohm),DR(Ohm)
+PPMS, 3, 0.1, 0.0350, 0.0010
+PPMS, 4.35, 0.1, 0.0225, 0.0005
+PPMS, 5.15, 0.1, 0.009, 0.0005
+PPMS, 6.6, 0.1, 0.0195, 0.0005
+PPMS, 8.6, 0.1, 0.0280, 0.0005
+PPMS, 9.7, 0.1, 0.044, 0.0005
+
+
