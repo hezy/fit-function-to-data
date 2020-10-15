@@ -69,7 +69,10 @@ def plot_it(data, func, fit_param, titles):
                  fmt='none', label='experiment')
     plt.plot(data.x,func(data.x, *fit_param[0])) #, label='fit: a0=%5.3f, a1=%5.3f, a2=%5.3f' % tuple(fit_param[0]))
     # arange figure
-    ax.grid(True)
+    ax.grid(True, which='major', axis='both',
+            color='grey', linestyle='-', linewidth=0.5)
+    ax.grid(True, which='minor', axis='both',
+            color='grey', linestyle='-', linewidth=0.25)
     ax.legend(loc='best')
     ax.set_title(titles[0])
     ax.set_xlabel(titles[1])

@@ -76,9 +76,10 @@ for file in sorted(files):
     plt.errorbar(x, y, xerr=Dx, yerr=Dy, fmt=".", capsize=4, label=legend)
 
 
-plt.grid(True)
-# plt.grid(True, which='major', axis='both', color='grey', linestyle='-', linewidth=0.5)
-# plt.grid(True, which='minor', axis='both', color='grey', linestyle='-', linewidth=0.25)
+plt.grid(True, which='major', axis='both',
+         color='grey', linestyle='-', linewidth=0.5)
+plt.grid(True, which='minor', axis='both',
+         color='grey', linestyle='-', linewidth=0.25)
 plt.minorticks_on()
 
 plt.rc('text', usetex=False)

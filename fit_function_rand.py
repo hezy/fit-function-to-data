@@ -89,7 +89,7 @@ def plot_it(data, func, fit_param, titles):
     input: data (Pandas DataFarme)
     output: a plot of the experimental results with the best fit
     '''
-    fig, ax = plt.subplots(figsize=(14, 8))
+    fig, ax = plt.subplots(figsize=(11.7, 8.3), dpi=144)
     plt.errorbar(data.x, data.y, xerr=data.dx, yerr=data.dy,
                  fmt='none', label='experiment')
     plt.plot(data.x, func(data.x, *fit_param[0]),
@@ -99,7 +99,11 @@ def plot_it(data, func, fit_param, titles):
     ax.text(0.05, 0.85, text_box, transform=ax.transAxes, fontsize=10,
             verticalalignment='top', bbox=props)
     # arange figure
-    ax.grid(True)
+    ax.grid(True, which='major', axis='both',
+            color='grey', linestyle='-', linewidth=0.5)
+    ax.grid(True, which='minor', axis='both',
+            color='grey', linestyle='-', linewidth=0.25)
+    ax.minorticks_on()
     ax.legend(loc='best')
     ax.set_title(titles[0])
     ax.set_xlabel(titles[1])
@@ -149,7 +153,8 @@ TITLES = 'Displacment vs Time', 'Time (ms)', 'Displacement (mm)'
 plot_it(DATA, poly_2, FIT_PARAM, TITLES)
 
 TITLES = 'Displacment residuals vs Time', 'Time (ms)', 'y_{obs} - y_{fit} (mm)'
-plot_it(calc_residuals(poly_2, DATA, FIT_PARAM[0]), zero_func, FIT_PARAM, TITLES)
+plot_it(calc_residuals(poly_2, DATA, FIT_PARAM[0]),
+        zero_func, FIT_PARAM, TITLES)
 
 # print fit results
 print(text_fit_results(FIT_PARAM))

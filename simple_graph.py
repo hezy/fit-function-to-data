@@ -17,12 +17,16 @@ R_experiment = R_theory + np.random.normal(0, 2, np.size(T))
 plt.close('all')
 plt.figure(figsize=(11.7, 8.3), dpi=144)
 
-plt.plot(T, R_experiment, 'o', label='experiment')
+plt.plot(T, R_experiment, 'o', mfc='none', alpha=0.7, label='experiment')
 plt.plot(T, R_theory, '-', label='theory')
 
 #plt.rc('text', usetex=False)
 #plt.rc('font', **{'family': 'sans-serif', 'sans-serif': ['DejaVu Sans']})
-plt.grid(True)
+plt.grid(True, which='major', axis='both',
+         color='grey', linestyle='-', linewidth=0.5)
+plt.grid(True, which='minor', axis='both',
+         color='grey', linestyle='-', linewidth=0.25)
+plt.minorticks_on()
 plt.minorticks_on()
 plt.xlabel('T (K)', fontsize=18)
 plt.ylabel('R ($\Omega$)', fontsize=18)
