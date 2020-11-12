@@ -95,8 +95,8 @@ plt.xticks(np.arange(0, 12, 2), fontsize=16)
 plt.yticks(fontsize=16)
 
 plt.legend(loc='upper left')
-#plt.xlim(0, 12)
-#plt.ylim(0, 4)
+# plt.xlim(0, 12)
+# plt.ylim(0, 4)
 
 plt.savefig('y_vs_x_plot.png')
 plt.show()
