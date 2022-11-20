@@ -15,10 +15,12 @@ R_experiment = R_theory + np.random.normal(0, 2, np.size(T))
 
 # prepare the graph
 plt.close('all')
+plt.style.use(['default'])
+
 plt.figure(figsize=(11.7, 8.3), dpi=144)
 
-plt.plot(T, R_experiment, 'o', mfc='none', alpha=0.7, label='experiment')
-plt.plot(T, R_theory, '-', label='theory')
+plt.plot(T, R_experiment, 'o', mfc='none', alpha=1, label='experiment')
+plt.plot(T, R_theory, '-',alpha=0.7, label='theory')
 
 #plt.rc('text', usetex=False)
 #plt.rc('font', **{'family': 'sans-serif', 'sans-serif': ['DejaVu Sans']})
