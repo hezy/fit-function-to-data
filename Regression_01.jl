@@ -13,3 +13,5 @@ marker = 0, label = "experiment", legend = :topright)
 f = fit(x, y, 2)
 
 plot!(f, label = "fit")
+
+savefig("Regression_01")
