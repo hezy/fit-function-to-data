@@ -2,16 +2,13 @@ using CSV, DataFrames, Plots, Measurements, Polynomials
 
 df = DataFrame(CSV.File("sample01.csv"))
 
-x = df[!, 1]
-Δx = df[!, 2]
-y = df[!, 3]
-Δy = df[!, 4]
-
-scatter(x .± Δx, y .± Δy,
+p = scatter(df."x" .± df."dx", df."y" .± df."dy",
 marker = 0, label = "experiment", legend = :topright)
 
 f = fit(x, y, 2)
 
-plot!(f, label = "fit")
+p = plot!(f, label = "fit")
+
+display(p)
 
 savefig("Regression_01")
